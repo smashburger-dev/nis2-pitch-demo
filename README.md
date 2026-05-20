@@ -6,6 +6,8 @@
 **Live Demo:** [smashburger-dev.github.io/nis2-pitch-demo](https://smashburger-dev.github.io/nis2-pitch-demo/)
 **Status:** Work in Progress · Prüfungsabgabe Sommer 2026
 
+![Pitch Walkthrough](pitch-walkthrough.gif)
+
 ---
 
 ## Was das ist
