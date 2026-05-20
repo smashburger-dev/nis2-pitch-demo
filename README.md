@@ -65,7 +65,7 @@ Bewusst weggelassen, da Prüfung WIP:
 
 ## Lizenz
 
-Code unter MIT. Inhalte (Pitch-Texte, Produkt-Mockups) bleiben Eigentum des Teams bis zur Prüfungsabgabe — danach offen.
+Code unter MIT. Inhalte (Pitch-Texte, Produkt-Mockups) bleiben Eigentum des Teams.
 
 ---
 
