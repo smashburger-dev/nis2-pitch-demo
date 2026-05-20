@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NIS2 Evidence Room - Produkt-Mockups</title>
+  <style>
+    @page { size: A4 landscape; margin: 0; }
+    :root {
+      --ink: #111827;
+      --muted: #5d6675;
+      --paper: #f6efe2;
+      --card: #fffaf0;
+      --line: #111827;
+      --orange: #ff5a1f;
+      --blue: #1647ff;
+      --green: #0f8a5f;
+      --yellow: #ffd166;
+      --red: #dc2626;
+      --gray: #e7dfd0;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #d7d2c8; color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+    .page {
+      width: 297mm;
+      height: 210mm;
+      margin: 0 auto;
+      padding: 9mm;
+      background:
+        radial-gradient(circle at 92% 8%, rgba(255,90,31,.14), transparent 24%),
+        radial-gradient(circle at 5% 92%, rgba(22,71,255,.10), transparent 24%),
+        var(--paper);
+      page-break-after: always;
+      break-after: page;
+      overflow: hidden;
+      position: relative;
+    }
+    .page:last-child { page-break-after: auto; break-after: auto; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5mm;
+      padding-bottom: 2.5mm;
+      border-bottom: 1.1mm solid var(--line);
+      font-size: 3mm;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .badge { padding: 1.25mm 2.2mm; border: .65mm solid var(--line); background: var(--yellow); }
+    h1 {
+      margin: 0;
+      font-size: 8.8mm;
+      line-height: .96;
+      letter-spacing: -.35mm;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+    }
+    h2 { margin: 0 0 2mm; font-size: 5mm; line-height: 1; letter-spacing: -.15mm; }
+    h3 { margin: 0 0 1.5mm; font-size: 3.1mm; text-transform: uppercase; letter-spacing: .07em; }
+    p, li { margin: 0; font-size: 3mm; line-height: 1.22; }
+    ul { margin: 0; padding-left: 4mm; }
+    .muted { color: var(--muted); }
+    .layout { display: grid; grid-template-columns: 70mm 1fr; gap: 5mm; height: 171mm; }
+    .side { border: .8mm solid var(--line); background: rgba(255,255,255,.58); padding: 4mm; overflow: hidden; }
+    .screen { border: 1mm solid var(--line); background: #fffdf8; box-shadow: 2mm 2mm 0 rgba(17,24,39,.18); overflow: hidden; min-width: 0; }
+    .browser { display: flex; align-items: center; gap: 1.5mm; height: 9mm; padding: 2mm 3mm; border-bottom: .65mm solid var(--line); background: var(--gray); }
+    .dot { width: 2.2mm; height: 2.2mm; border-radius: 50%; border: .45mm solid var(--line); background: white; }
+    .url { flex: 1; padding: 1.1mm 2mm; border: .45mm solid var(--line); background: white; font-size: 2.3mm; color: var(--muted); }
+    .app { display: grid; grid-template-columns: 44mm 1fr; min-height: 151mm; min-width: 0; }
+    .nav { border-right: .65mm solid var(--line); background: #111827; color: white; padding: 4mm; }
+    .nav h3 { color: var(--yellow); }
+    .navitem { margin-top: 3mm; padding: 2mm; border: .45mm solid rgba(255,255,255,.3); font-size: 2.7mm; font-weight: 800; }
+    .navitem.active { background: var(--orange); border-color: white; }
+    .content { padding: 4mm; min-width: 0; overflow: hidden; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+    .panel { border: .65mm solid var(--line); background: rgba(246,239,226,.55); padding: 3mm; }
+    .field { margin-top: 2mm; padding: 2.2mm; border: .45mm solid var(--line); background: white; font-size: 2.7mm; }
+    .btn { display: inline-block; margin-top: 3mm; padding: 2mm 3.5mm; border: .55mm solid var(--line); background: var(--orange); color: white; font-weight: 900; font-size: 2.8mm; }
+    .status { display: inline-block; padding: 1mm 1.6mm; border: .45mm solid var(--line); font-size: 2.35mm; font-weight: 900; text-transform: uppercase; }
+    .red { background: rgba(220,38,38,.14); }
+    .yellow { background: rgba(255,209,102,.42); }
+    .green { background: rgba(15,138,95,.14); }
+    .blue { background: rgba(22,71,255,.10); }
+    .bar { height: 6mm; border: .45mm solid var(--line); background: white; margin-top: 1.6mm; }
+    .fill { height: 100%; background: var(--green); border-right: .45mm solid var(--line); }
+    .fill.orange { background: var(--orange); }
+    .fill.blue { background: var(--blue); }
+    .table { width: 100%; border-collapse: collapse; font-size: 2.35mm; table-layout: fixed; }
+    .table th, .table td { border: .42mm solid var(--line); padding: 1.35mm; text-align: left; vertical-align: top; overflow-wrap: anywhere; hyphens: auto; }
+    .table th { background: var(--gray); text-transform: uppercase; font-size: 2.3mm; }
+    .source-row { position: absolute; left: 9mm; right: 9mm; bottom: 6.5mm; display: flex; gap: 2mm; flex-wrap: wrap; }
+    .source { padding: 1.2mm 1.9mm; border: .45mm solid var(--line); background: white; font-size: 2.35mm; font-weight: 800; }
+    @media screen { body { padding: 16px 0; } .page { margin-bottom: 18px; box-shadow: 0 12px 42px rgba(0,0,0,.22); } }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="topbar"><span>NIS2 Evidence Room</span><span class="badge">Mockup 01 / Betroffenheitscheck</span></div>
+    <div class="layout">
+      <aside class="side">
+        <h1>Vom Gesetz zur Einordnung.</h1>
+        <p class="muted" style="margin-top:4mm;">Der erste Screen ersetzt keine Rechtsberatung. Er sammelt strukturierte Daten und markiert unklare Fälle für Legal Review.</p>
+      </aside>
+      <main class="screen">
+        <div class="browser"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">app.nis2-evidence-room.de/check</div></div>
+        <div class="app">
+          <nav class="nav"><h3>NIS2 Evidence Room</h3><div class="navitem active">1 Betroffenheit</div><div class="navitem">2 §30 Gap Map</div><div class="navitem">3 Evidence Room</div><div class="navitem">4 GF Cockpit</div></nav>
+          <section class="content">
+            <h2>Betroffenheitscheck</h2>
+            <div class="grid-2">
+              <div class="panel"><h3>Unternehmen</h3><div class="field">Branche: Maschinenbau / NACE C28</div><div class="field">Mitarbeitende: 86</div><div class="field">Jahresumsatz: 18,4 Mio. EUR</div><div class="field">Bilanzsumme: 11,2 Mio. EUR</div></div>
+              <div class="panel green"><h3>Ergebnis</h3><p><strong>Wahrscheinlich wichtige Einrichtung</strong></p><p class="muted" style="margin-top:2mm;">Begründung: Anlage 2, verarbeitendes Gewerbe, Schwellenwerte erfüllt.</p><span class="btn">Workspace anlegen</span></div>
+            </div>
+            <div class="panel yellow" style="margin-top:3mm;"><h3>Legal-Review-Flag</h3><p>Die Einordnung ist eine strukturierte Ersteinschätzung. Finale Selbst-Identifizierung und Rechtsprüfung bleiben beim Unternehmen.</p></div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div class="source-row"><span class="source">Quelle: BSI Betroffenheitsprüfung</span><span class="source">Quelle: BSIG §28 + Anlage 2</span></div>
+  </section>
+
+  <section class="page">
+    <div class="topbar"><span>NIS2 Evidence Room</span><span class="badge">Mockup 02 / §30 Gap Map</span></div>
+    <div class="layout">
+      <aside class="side"><h1>Zehn Pflichten werden operative Karten.</h1><p class="muted" style="margin-top:4mm;">Jede §30-Maßnahme bekommt Status, Owner, Nachweis und nächsten Schritt. Keine grüne Ampel ohne Evidenz.</p></aside>
+      <main class="screen">
+        <div class="browser"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">app.nis2-evidence-room.de/gap-map</div></div>
+        <div class="app">
+          <nav class="nav"><h3>Workspace</h3><div class="navitem">Betroffenheit</div><div class="navitem active">§30 Gap Map</div><div class="navitem">Evidence Room</div><div class="navitem">GF Cockpit</div></nav>
+          <section class="content">
+            <h2>§30 Gap Map</h2>
+            <div class="grid-3">
+              <div class="panel red"><h3>Incident Handling</h3><span class="status red">nicht dokumentiert</span><p style="margin-top:2mm;">Nächster Schritt: Rollen und 24h/72h/30d-Prozess definieren.</p></div>
+              <div class="panel yellow"><h3>Backup / BCM</h3><span class="status yellow">gestartet</span><p style="margin-top:2mm;">Restore-Test fehlt. Owner: IT-Leitung.</p></div>
+              <div class="panel green"><h3>MFA / Kommunikation</h3><span class="status green">nachgewiesen</span><p style="margin-top:2mm;">MFA-Screenshot und Ausnahmeprotokoll vorhanden.</p></div>
+            </div>
+            <table class="table" style="margin-top:3mm;"><tr><th>Maßnahme</th><th>Owner</th><th>Nachweis</th><th>Review</th></tr><tr><td>Lieferkette</td><td>Einkauf + IT</td><td>Lieferantenliste fehlt</td><td>offen</td></tr><tr><td>Schulung</td><td>HR</td><td>GF-Schulung geplant</td><td>30 Tage</td></tr><tr><td>Asset Management</td><td>Systemhaus</td><td>Export vorhanden</td><td>90 Tage</td></tr></table>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div class="source-row"><span class="source">Quelle: BSIG §30</span><span class="source">Produktprinzip: Nachweis vor Ampel</span></div>
+  </section>
+
+  <section class="page">
+    <div class="topbar"><span>NIS2 Evidence Room</span><span class="badge">Mockup 03 / Evidence Room</span></div>
+    <div class="layout">
+      <aside class="side"><h1>Nachweise statt Excel-Chaos.</h1><p class="muted" style="margin-top:4mm;">Der Evidence Room speichert nicht einfach Dateien. Er verknüpft jeden Nachweis mit Maßnahme, Owner, Review-Datum und Aussagekraft.</p></aside>
+      <main class="screen">
+        <div class="browser"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">app.nis2-evidence-room.de/evidence</div></div>
+        <div class="app">
+          <nav class="nav"><h3>Nachweise</h3><div class="navitem">Alle Nachweise</div><div class="navitem active">MFA</div><div class="navitem">Backup</div><div class="navitem">Lieferkette</div></nav>
+          <section class="content">
+            <h2>Nachweis: MFA-Abdeckung</h2>
+            <div class="grid-2">
+              <div class="panel green"><h3>Nachweisstatus</h3><span class="status green">verwendbar</span><div class="field">Linked §30: MFA / sichere Kommunikation</div><div class="field">Owner: Systemhaus Müller IT</div><div class="field">Review: 2026-08-19</div></div>
+              <div class="panel"><h3>Dateien & Quellen</h3><div class="field">m365-mfa-settings.png</div><div class="field">exceptions-list.xlsx</div><div class="field">rollout-confirmation.pdf</div><span class="btn">Nachweis hinzufügen</span></div>
+            </div>
+            <div class="panel yellow" style="margin-top:3mm;"><h3>Warnung</h3><p>Nachweis zeigt vorhandene MFA-Konfiguration. Er beweist nicht automatisch rechtliche Suffizienz.</p></div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div class="source-row"><span class="source">Guardrail: Nachweis vorhanden ≠ rechtlich ausreichend</span></div>
+  </section>
+
+  <section class="page">
+    <div class="topbar"><span>NIS2 Evidence Room</span><span class="badge">Mockup 04 / GF Cockpit</span></div>
+    <div class="layout">
+      <aside class="side"><h1>Management sieht Risiko ohne ISMS-Details.</h1><p class="muted" style="margin-top:4mm;">§38 macht Umsetzung, Überwachung und Schulung zur Geschäftsleitungsaufgabe. Das Cockpit übersetzt Detailarbeit in Entscheidungen.</p></aside>
+      <main class="screen">
+        <div class="browser"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">app.nis2-evidence-room.de/management</div></div>
+        <div class="app">
+          <nav class="nav"><h3>GF Cockpit</h3><div class="navitem active">Übersicht</div><div class="navitem">Freigaben</div><div class="navitem">Schulung</div><div class="navitem">Report</div></nav>
+          <section class="content">
+            <h2>Geschäftsleitungs-Cockpit</h2>
+            <div class="grid-3"><div class="panel"><h3>Readiness</h3><div class="bar"><div class="fill orange" style="width:46%;"></div></div><p>46% dokumentiert</p></div><div class="panel red"><h3>High-Risk Gaps</h3><div class="big" style="font-size:13mm;font-weight:900;color:var(--red);">4</div><p>Incident, BCM, Lieferkette, Wirksamkeit</p></div><div class="panel yellow"><h3>Freigaben</h3><div class="big" style="font-size:13mm;font-weight:900;color:var(--orange);">3</div><p>warten auf Geschäftsleitung</p></div></div>
+            <table class="table" style="margin-top:3mm;"><tr><th>Entscheidung</th><th>Risiko</th><th>Empfehlung</th></tr><tr><td>Incident-Rollen freigeben</td><td>72h-Meldung nicht vorbereitet</td><td>Diese Woche entscheiden</td></tr><tr><td>GF-Schulung buchen</td><td>§38-Schulung offen</td><td>Termin setzen</td></tr></table>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div class="source-row"><span class="source">Quelle: BSIG §38</span><span class="source">Buyer: Geschäftsführung</span></div>
+  </section>
+
+  <section class="page">
+    <div class="topbar"><span>NIS2 Evidence Room</span><span class="badge">Mockup 05 / Fragebogen-Builder</span></div>
+    <div class="layout">
+      <aside class="side"><h1>Der tägliche Wedge: Kundenfragebögen.</h1><p class="muted" style="margin-top:4mm;">Viele Firmen spüren Security-Druck zuerst über Kunden und Lieferketten. Der Builder nutzt vorhandene Evidenz, statt Antworten neu zu erfinden.</p></aside>
+      <main class="screen">
+        <div class="browser"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">app.nis2-evidence-room.de/questionnaire</div></div>
+        <div class="app">
+          <nav class="nav"><h3>Fragebogen</h3><div class="navitem active">Kundenanfrage</div><div class="navitem">Antworten</div><div class="navitem">Lücken</div><div class="navitem">Export</div></nav>
+          <section class="content">
+            <h2>Kundenfragebogen: Automotive OEM</h2>
+            <table class="table"><tr><th>Frage</th><th>Status</th><th>Antwortbasis</th></tr><tr><td>Nutzen Sie MFA für Remote-Zugriffe?</td><td><span class="status green">belegt</span></td><td>MFA-Screenshot + Ausnahmenliste</td></tr><tr><td>Wann wurde zuletzt ein Restore-Test durchgeführt?</td><td><span class="status yellow">teilweise</span></td><td>Backup-Log vorhanden, Restore-Test fehlt</td></tr><tr><td>Gibt es einen Incident-Response-Prozess?</td><td><span class="status red">Lücke</span></td><td>Keine Evidenz vorhanden</td></tr></table>
+            <div class="panel blue" style="margin-top:3mm;"><h3>Export-Regel</h3><p>Unsichere Aussagen werden nicht automatisch als erfüllt exportiert. Das System markiert `braucht Nachweis`.</p></div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div class="source-row"><span class="source">Wedge: Evidenz-Wiederverwendung</span><span class="source">Kein Compliance-Autopilot</span></div>
+  </section>
+
+  <section class="page">
+    <div class="topbar"><span>NIS2 Evidence Room</span><span class="badge">Mockup 06 / Systemhaus Partner View</span></div>
+    <div class="layout">
+      <aside class="side"><h1>Nicht Systemhäuser ersetzen. Skalieren.</h1><p class="muted" style="margin-top:4mm;">Der Partner-Modus macht regionale IT-Dienstleister zum Kanal: ein Template, mehrere Kunden, wiederholbare Reports.</p></aside>
+      <main class="screen">
+        <div class="browser"><span class="dot"></span><span class="dot"></span><span class="dot"></span><div class="url">partner.nis2-evidence-room.de/clients</div></div>
+        <div class="app">
+          <nav class="nav"><h3>Partner View</h3><div class="navitem active">Kunden</div><div class="navitem">Templates</div><div class="navitem">Aufgaben</div><div class="navitem">Reports</div></nav>
+          <section class="content">
+            <h2>Systemhaus-Dashboard</h2>
+            <table class="table"><tr><th>Kunde</th><th>Branche</th><th>Readiness</th><th>Nächster Schritt</th></tr><tr><td>Müller Maschinenbau GmbH</td><td>C28</td><td>46%</td><td>Incident-Rollen klären</td></tr><tr><td>ElektroTech Bauer KG</td><td>C27</td><td>62%</td><td>Lieferantenliste prüfen</td></tr><tr><td>OptikForm GmbH</td><td>C26</td><td>31%</td><td>Betroffenheit legal prüfen</td></tr></table>
+            <div class="grid-2" style="margin-top:3mm;"><div class="panel green"><h3>Partner-Vorteil</h3><p>Wiederholbare Gap Checks, Reports und Evidence Requests.</p></div><div class="panel yellow"><h3>Offene Hypothese</h3><p>Systemhäuser müssen Partnerlogik bestätigen, sonst ist der Kanal schwach.</p></div></div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <div class="source-row"><span class="source">GTM-Hypothese: Systemhaus-Partner</span><span class="source">Muss getestet werden</span></div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIS2 Evidence Room - Live Pitch</title>
+<style>
+:root{
+  --ink:#0b0f14;
+  --ink-2:#202631;
+  --muted:#68717e;
+  --paper:#f4efe3;
+  --panel:#fffaf0;
+  --line:#0b0f14;
+  --orange:#ff5a1f;
+  --blue:#1647ff;
+  --green:#0f8a5f;
+  --yellow:#ffd166;
+  --red:#d4351c;
+  --soft:#e6ddcc;
+  --shadow:7px 7px 0 rgba(11,15,20,.16);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--ink);color:var(--ink);font-family:Inter,Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+body{overflow:hidden}
+button{font:inherit}
+.deck{
+  height:100vh;
+  width:100vw;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255,90,31,.22), transparent 28%),
+    radial-gradient(circle at 90% 80%, rgba(22,71,255,.20), transparent 32%),
+    var(--ink);
+  position:relative;
+}
+.rail{
+  position:fixed;left:0;top:0;bottom:0;width:76px;background:#080b10;color:var(--paper);border-right:3px solid var(--line);z-index:50;
+  display:flex;flex-direction:column;align-items:center;padding:18px 10px;gap:18px;
+}
+.mark{width:40px;height:40px;background:var(--orange);border:2px solid var(--paper);display:grid;place-items:center;font-weight:950;color:var(--ink);letter-spacing:-.06em}
+.rail-num{writing-mode:vertical-rl;text-orientation:mixed;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8b93a3;margin-top:6px}
+.progress-shell{width:8px;flex:1;border:1px solid rgba(244,239,227,.38);background:#1a202b;position:relative}
+.progress-fill{position:absolute;left:0;right:0;bottom:0;background:var(--orange);height:0%;transition:height .22s ease}
+.rail-btn{width:40px;height:34px;border:2px solid var(--paper);background:transparent;color:var(--paper);cursor:pointer;font-weight:900}
+.rail-btn:hover{background:var(--paper);color:var(--ink)}
+.stage{height:100vh;margin-left:76px;position:relative;overflow:hidden}
+.slide{
+  position:absolute;inset:0;padding:30px 42px 42px;background:
+    linear-gradient(135deg, rgba(255,250,240,.96), rgba(244,239,227,.94)),
+    repeating-linear-gradient(90deg, transparent 0 32px, rgba(11,15,20,.035) 32px 33px);
+  transform:translateX(110%);opacity:0;pointer-events:none;transition:transform .42s cubic-bezier(.22,.9,.2,1),opacity .25s ease;overflow:hidden;
+}
+.slide.active{transform:translateX(0);opacity:1;z-index:2;pointer-events:auto}
+.slide.prev{transform:translateX(-22%);opacity:0;z-index:1;pointer-events:none}
+.slide::before{content:"";position:absolute;inset:14px;border:2px solid rgba(11,15,20,.18);pointer-events:none}
+.top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:16px;padding-bottom:11px;border-bottom:3px solid var(--line);position:relative;z-index:3}
+.top-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.kicker{font-size:11px;font-weight:950;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.kicker b{color:var(--orange)}
+.chapter{font-size:11px;font-weight:950;letter-spacing:.13em;text-transform:uppercase;border:2px solid var(--line);padding:5px 9px;background:white}
+.chapter.ok{background:var(--green);color:white}.chapter.model{background:var(--yellow)}.chapter.risk{background:var(--red);color:white}.chapter.blue{background:var(--blue);color:white}
+.method{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase;border:2px solid var(--line);background:var(--ink);color:var(--paper);padding:5px 9px}
+.method::before{content:"\25C8";font-size:11px;color:var(--orange)}
+h1{font-size:clamp(42px,5.6vw,80px);line-height:.93;letter-spacing:-.06em;margin:0;text-transform:uppercase;max-width:1120px}
+h2{font-size:clamp(20px,2vw,30px);line-height:1.02;letter-spacing:-.035em;margin:0 0 9px;text-transform:uppercase;overflow-wrap:anywhere;hyphens:auto}
+h3{font-size:12px;letter-spacing:.11em;text-transform:uppercase;margin:0 0 7px}
+p{font-size:17px;line-height:1.32;margin:0;color:var(--ink-2)}
+.lede{font-size:clamp(19px,2.05vw,29px);font-weight:750;line-height:1.13;letter-spacing:-.022em;margin-top:18px;max-width:960px;color:var(--ink)}
+.muted{color:var(--muted)}
+.small{font-size:14px;line-height:1.3}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{background:rgba(255,250,240,.84);border:3px solid var(--line);box-shadow:var(--shadow);padding:18px;min-width:0;position:relative;overflow:hidden}
+.card.orange{background:rgba(255,90,31,.14)}.card.blue{background:rgba(22,71,255,.10)}.card.green{background:rgba(15,138,95,.13)}.card.yellow{background:rgba(255,209,102,.45)}.card.red{background:rgba(212,53,28,.12)}.card.ink{background:var(--ink);color:var(--paper)}
+.card.ink h2,.card.ink h3{color:var(--paper)}.card.ink p{color:#cdd3dc}
+.metric{font-size:clamp(44px,5.4vw,80px);line-height:1;letter-spacing:-.08em;font-weight:950;color:var(--orange);margin:0 0 9px;overflow:visible}.metric.small{font-size:clamp(30px,3.8vw,54px)}
+.unit{font-size:12px;font-weight:950;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.label{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--line);background:white;font-size:10px;font-weight:950;letter-spacing:.07em;text-transform:uppercase;padding:5px 8px;margin-bottom:10px}
+.label .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);border:1px solid var(--line)}.label.green .dot{background:var(--green)}.label.orange .dot{background:var(--orange)}.label.red .dot{background:var(--red)}.label.yellow .dot{background:var(--yellow)}
+.source-row{position:absolute;left:42px;right:42px;bottom:20px;display:flex;gap:8px;flex-wrap:wrap;z-index:5}.source{background:white;border:2px solid var(--line);padding:5px 8px;font-size:10px;font-weight:850;color:var(--ink)}
+.hero-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:stretch;height:calc(100vh - 150px)}
+.hero-panel{display:flex;flex-direction:column;justify-content:space-between}.stack{display:flex;flex-direction:column;gap:13px}.pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.pill{border:2px solid var(--line);background:white;padding:7px 10px;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.05em}.pill.hot{background:var(--orange);color:white}.pill.blue{background:var(--blue);color:white}.pill.green{background:var(--green);color:white}
+.diagram{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}.arrow-card::after{content:"\2192";position:absolute;right:12px;top:12px;font-size:26px;font-weight:950;color:var(--orange)}
+.map{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:22px}.map .tile{border:2px solid var(--line);background:white;padding:13px;min-height:92px}.tile strong{display:block;font-size:20px;color:var(--orange);margin-bottom:7px}.tile span{font-size:12px;color:var(--muted);font-weight:750}
+.agenda{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:22px}
+.astep{border:3px solid var(--line);background:white;padding:13px 14px;box-shadow:4px 4px 0 rgba(11,15,20,.14);min-height:104px;display:flex;flex-direction:column;gap:5px}
+.astep .anum{font-size:13px;font-weight:950;color:var(--orange);letter-spacing:.04em}
+.astep .atitle{font-size:16px;font-weight:950;text-transform:uppercase;line-height:1.04;letter-spacing:-.02em}
+.astep .ameth{font-size:10.5px;font-weight:850;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;margin-top:auto}
+table{width:100%;border-collapse:collapse;table-layout:fixed;background:white;border:3px solid var(--line);box-shadow:var(--shadow)}th,td{border:2px solid var(--line);text-align:left;vertical-align:top;padding:10px;font-size:13.5px;line-height:1.22}th{background:var(--soft);font-size:11px;letter-spacing:.1em;text-transform:uppercase}td strong{display:block;font-size:17px;margin-bottom:3px}
+.wedge{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:24px}.wedge .card{min-height:230px}.big-quote{font-size:clamp(28px,4vw,54px);line-height:.98;letter-spacing:-.05em;font-weight:950;text-transform:uppercase;margin-top:20px;max-width:1060px}
+.demo-shell{position:absolute;inset:88px 38px 32px;display:grid;grid-template-columns:320px 1fr;gap:18px;z-index:4}.demo-copy{display:flex;flex-direction:column;gap:13px}.demo-frame-wrap{border:3px solid var(--line);box-shadow:var(--shadow);background:#0b0f14;overflow:hidden;position:relative}.demo-frame-wrap iframe{width:100%;height:100%;border:0;background:white}.demo-actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:3px solid var(--line);background:var(--orange);color:white;padding:11px 15px;font-size:12px;font-weight:950;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;box-shadow:4px 4px 0 rgba(11,15,20,.2)}.btn.secondary{background:white;color:var(--ink)}.btn.blue{background:var(--blue)}.btn:hover{transform:translate(-1px,-1px)}
+.road{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-top:18px}.road .step{border:3px solid var(--line);background:white;padding:13px;min-height:214px;position:relative}.step .num{font-size:30px;font-weight:950;color:var(--orange);letter-spacing:-.07em}.step .when{font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.06em;color:var(--blue);margin-bottom:4px}.step p{font-size:12.5px}.step h3{margin-bottom:5px}
+.timeaxis{display:flex;align-items:center;gap:10px;margin-top:22px;font-size:11px;font-weight:950;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.timeaxis .bar{flex:1;height:6px;background:linear-gradient(90deg,var(--orange),var(--blue))}
+.risk-list{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}.risk-list .card{min-height:250px}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.member{border:3px solid var(--line);background:white;box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:9px;min-height:268px}
+.member .avatar{width:54px;height:54px;border:3px solid var(--line);background:var(--orange);color:var(--ink);display:grid;place-items:center;font-weight:950;font-size:21px;letter-spacing:-.05em}
+.member .mname{font-size:21px;font-weight:950;letter-spacing:-.03em;text-transform:uppercase;line-height:1}
+.member .mrole{font-size:11px;font-weight:950;letter-spacing:.07em;text-transform:uppercase;color:var(--blue)}
+.member .mtask{font-size:13.5px;color:var(--ink-2);line-height:1.3}
+.member .mstrength{margin-top:auto;border-top:2px solid var(--line);padding-top:9px;font-size:12.5px}
+.member .mstrength b{display:block;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.pricewrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.tier{border:3px solid var(--line);background:white;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:7px}
+.tier.feat{background:rgba(255,90,31,.13)}
+.tier .tname{font-size:13px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+.tier .tprice{font-size:34px;font-weight:950;letter-spacing:-.06em;line-height:1}
+.tier .tprice span{font-size:13px;font-weight:850;color:var(--muted)}
+.tier .tdesc{font-size:12.5px;color:var(--ink-2);line-height:1.3}
+.tier .tfor{font-size:10.5px;font-weight:950;text-transform:uppercase;letter-spacing:.05em;color:var(--blue);margin-top:auto}
+.footer-help{position:fixed;right:18px;bottom:14px;z-index:60;color:rgba(244,239,227,.78);font-size:11px;letter-spacing:.04em}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(24px);z-index:80;opacity:0;background:var(--ink);color:white;border:2px solid white;padding:11px 15px;font-weight:850;font-size:12px;transition:.2s ease}
+.handout body,.handout{overflow:auto}.handout .deck{height:auto;min-height:100vh}.handout .stage{height:auto;overflow:visible}.handout .slide{position:relative;transform:none!important;opacity:1!important;pointer-events:auto;min-height:100vh;margin:0 0 16px}.handout .slide.prev{transform:none}.handout .rail,.handout .footer-help{display:none}.handout .stage{margin-left:0}.handout .slide::before{inset:14px}
+@media(max-width:900px){body{overflow:auto}.rail{display:none}.stage{margin-left:0;overflow:auto}.slide{position:relative;transform:none!important;opacity:1!important;min-height:100vh;height:auto}.slide:not(.active){display:none}.hero-layout,.demo-shell,.grid2,.grid3,.grid4,.wedge,.risk-list,.agenda,.team-grid,.pricewrap{grid-template-columns:1fr}.demo-shell{position:relative;inset:auto;margin-top:20px}.demo-frame-wrap{height:70vh}.road,.diagram,.map{grid-template-columns:1fr 1fr}.source-row{position:relative;left:auto;right:auto;bottom:auto;margin-top:24px}.slide::before{display:none}}
+@media print{@page{size:A4 landscape;margin:0}html,body{overflow:visible!important;background:white}.rail,.footer-help,.toast{display:none}.stage{margin-left:0;height:auto;overflow:visible!important}.deck{height:auto;background:white;overflow:visible!important}.slide{display:block!important;position:relative!important;inset:auto!important;transform:none!important;opacity:1!important;width:297mm;height:210mm;page-break-after:always;break-after:page;padding:10mm;overflow:hidden}.slide.prev{transform:none!important;opacity:1!important}.slide:last-child{page-break-after:auto}.demo-shell{inset:25mm 10mm 10mm}.demo-frame-wrap iframe{display:none}.demo-frame-wrap::after{content:"Live-Demo separat oeffnen: demo.html";display:grid;place-items:center;height:100%;color:white;font-weight:950;padding:20px;text-align:center}.source-row{left:10mm;right:10mm;bottom:6mm}h1{font-size:17mm}.lede{font-size:5.6mm}.metric{font-size:16mm}.metric.small{font-size:12mm}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+  <aside class="rail">
+    <div class="mark">N2</div>
+    <div class="rail-num"><span id="countText">01 / 18</span></div>
+    <div class="progress-shell"><div class="progress-fill" id="progressFill"></div></div>
+    <button class="rail-btn" id="prevBtn" title="Zurück">↑</button>
+    <button class="rail-btn" id="nextBtn" title="Weiter">↓</button>
+    <button class="rail-btn" id="modeBtn" title="Handout-Modus">∞</button>
+  </aside>
+
+  <main class="stage" id="stage">
+
+    <!-- 01 TITEL -->
+    <section class="slide active" data-title="Titel">
+      <div class="top"><div class="kicker">NIS2 Evidence Room</div><div class="top-right"><div class="chapter model">Investoren-Pitch</div></div></div>
+      <div class="hero-layout">
+        <div class="hero-panel">
+          <div>
+            <h1>Nachweis-Workflows für NIS2.</h1>
+            <p class="lede">Ein spezialisierter Evidence Room für deutschen Manufacturing-Mittelstand und seine IT-Systemhäuser.</p>
+            <div class="pillrow"><span class="pill hot">C26-C30 Wedge</span><span class="pill blue">§30 Gap Map</span><span class="pill green">Systemhaus OS</span></div>
+          </div>
+          <div class="card yellow"><h2>Nicht: Compliance-Garantie.</h2><p>Sondern: Nachweisfähigkeit, Gap-Transparenz, Management-Readiness und wiederverwendbare Kundenfragebogen-Antworten.</p></div>
+        </div>
+        <div class="stack">
+          <div class="card"><div class="label green"><span class="dot"></span>Verifiziert</div><div class="metric">29.500</div><p>vom BSI genannter Gesamtumfang betroffener wichtiger und besonders wichtiger Einrichtungen in Deutschland.</p></div>
+          <div class="card"><div class="label yellow"><span class="dot"></span>Schätzung</div><div class="metric small">4,1-4,6k</div><p>mittelgroße C26-C30-Hersteller als erster, messbarer Beachhead.</p></div>
+        </div>
+      </div>
+      <div class="source-row"><span class="source">Entrepreneurship · Macromedia</span><span class="source">Team: Katana · Jervelund · Burkhardt</span><span class="source">Status: TEST FIRST</span><span class="source">Live-Demo integriert</span></div>
+    </section>
+
+    <!-- 02 AGENDA -->
+    <section class="slide" data-title="Agenda">
+      <div class="top"><div class="kicker">Aufbau &amp; Methodik</div><div class="top-right"><div class="chapter">Roter Faden</div></div></div>
+      <h1 style="font-size:clamp(32px,4vw,58px)">Neun Punkte. Eine Storyline.</h1>
+      <p class="small muted" style="margin-top:8px;max-width:980px">Der Pitch folgt dem klassischen Aufbau aus Unit 5 — und jeder Abschnitt wendet ein benanntes Konzept aus dem Kurs an.</p>
+      <div class="agenda">
+        <div class="astep"><span class="anum">01</span><span class="atitle">Kundenproblem</span><span class="ameth">Jobs-to-be-Done</span></div>
+        <div class="astep"><span class="anum">02</span><span class="atitle">Lösungs-versprechen</span><span class="ameth">Value Proposition</span></div>
+        <div class="astep"><span class="anum">03</span><span class="atitle">Produkt &amp; Alleinstellung</span><span class="ameth">USP · Live-Demo</span></div>
+        <div class="astep"><span class="anum">04</span><span class="atitle">Geschäftsmodell</span><span class="ameth">Lean / Business Model Canvas</span></div>
+        <div class="astep"><span class="anum">05</span><span class="atitle">Markt &amp; Wettbewerb</span><span class="ameth">Marktgröße · Porter-Wedge</span></div>
+        <div class="astep"><span class="anum">06</span><span class="atitle">Marketing &amp; Vertrieb</span><span class="ameth">STP &amp; 4 Ps</span></div>
+        <div class="astep"><span class="anum">07</span><span class="atitle">Strategische Roadmap</span><span class="ameth">Meilenstein-Planung</span></div>
+        <div class="astep"><span class="anum">08</span><span class="atitle">Finanzen</span><span class="ameth">Finanzplan · Finanzierung</span></div>
+        <div class="astep"><span class="anum">09</span><span class="atitle">Team</span><span class="ameth">Kompetenz-Abdeckung</span></div>
+      </div>
+      <div class="source-row"><span class="source">Aufbau nach Unit 5 — Investorenansprache</span><span class="source">Kontext-Rahmen: Rogers — Regulierung als erzwungene Adoption</span></div>
+    </section>
+
+    <!-- 03 WHY NOW -->
+    <section class="slide" data-title="Why Now">
+      <div class="top"><div class="kicker">Kontext · <b>Why Now</b></div><div class="top-right"><div class="method">Rogers — Diffusion</div><div class="chapter ok">Verifiziert</div></div></div>
+      <h1>Regulierung wird operative Arbeit.</h1>
+      <div class="diagram">
+        <div class="card arrow-card orange"><h2>Registrieren</h2><p>BSI-Portal, Unternehmensdaten, Sektor, Größe, Kontakt.</p></div>
+        <div class="card arrow-card yellow"><h2>Melden</h2><p>24h-Frühmeldung, 72h-Meldung, 30-Tage-Abschluss.</p></div>
+        <div class="card arrow-card blue"><h2>Dokumentieren</h2><p>§30 Maßnahmen müssen implementiert und dokumentiert werden.</p></div>
+        <div class="card green"><h2>Überwachen</h2><p>§38 macht Geschäftsleitung für Umsetzung und Monitoring verantwortlich.</p></div>
+      </div>
+      <p class="big-quote">Der Pain ist nicht nur juristisch. Er ist ein laufender Nachweisjob.</p>
+      <p class="small muted" style="margin-top:14px;max-width:1000px">Theoriebezug: NIS2 erzeugt eine <b>erzwungene Adoption</b> — anders als bei freiwilliger Innovation entscheidet nicht Neugier, sondern Pflicht über die Übernahme. Genau das verkürzt den Markteintritt.</p>
+      <div class="source-row"><span class="source">BSI NIS-2-Pflichten</span><span class="source">BSIG §30</span><span class="source">BSIG §38</span></div>
+    </section>
+
+    <!-- 04 KUNDENPROBLEM -->
+    <section class="slide" data-title="Kundenproblem">
+      <div class="top"><div class="kicker">Punkt <b>01</b> · Kundenproblem</div><div class="top-right"><div class="method">Jobs-to-be-Done</div><div class="chapter ok">Verifiziert</div></div></div>
+      <h1>Betroffen, verantwortlich — und ohne System.</h1>
+      <div class="grid2" style="margin-top:22px">
+        <div class="card ink">
+          <h3 style="color:var(--orange)">Der Zielkunde</h3>
+          <h2>Geschäftsführung eines mittelgroßen C26-C30-Herstellers.</h2>
+          <p>50-249 Mitarbeitende, kein CISO, keine eigene IT-Security-Rolle. Nach §38 BSIG persönlich für Umsetzung und Überwachung verantwortlich.</p>
+          <p style="margin-top:12px;color:var(--yellow)"><b>Der Job:</b> evidence-ready werden — ohne Security-Team und ohne fünf- bis sechsstelliges Beratungsprojekt.</p>
+        </div>
+        <div class="stack">
+          <div class="card red"><h2>Nachweise verstreut</h2><p>Screenshots, Policies, Logs, Schulungs- und Lieferantennachweise liegen in Mails, Ordnern und Tickets.</p></div>
+          <div class="card yellow"><h2>Owner unklar</h2><p>IT, Einkauf, HR, Geschäftsführung und Systemhaus teilen Verantwortung — aber selten einen gemeinsamen Arbeitsstand.</p></div>
+          <div class="card blue"><h2>Wiederholung nervt</h2><p>Dieselben Evidenzen werden für §30, Management-Reports und Kundenfragebögen mehrfach gesucht.</p></div>
+        </div>
+      </div>
+      <p class="small muted" style="margin-top:14px;max-width:1040px"><b>Wie verifiziert:</b> offizielle BSI-/BSIG-Quellen, Wettbewerber-Pricing und Sekundärsignale zum Registrierungs-Backlog. Primär-Interviews mit Herstellern stehen bewusst noch aus — siehe Validierung.</p>
+      <div class="source-row"><span class="source">BSIG §38 — Geschäftsleitungspflicht</span><span class="source">Desk Research 2026-05-19</span><span class="source">Primärvalidierung: pending</span></div>
+    </section>
+
+    <!-- 05 LOESUNGSVERSPRECHEN -->
+    <section class="slide" data-title="Lösungsversprechen">
+      <div class="top"><div class="kicker">Punkt <b>02</b> · Lösungsversprechen</div><div class="top-right"><div class="method">Value Proposition</div><div class="chapter blue">Kernidee</div></div></div>
+      <h1>Aus Pflichttexten wird ein Arbeitsstand.</h1>
+      <p class="lede">NIS2 Evidence Room übersetzt die zehn §30-Pflichten in Aufgaben, Nachweise, Owner, Review-Daten, Management-Freigaben und wiederverwendbare Fragebogen-Antworten.</p>
+      <div class="grid3" style="margin-top:24px">
+        <div class="card orange"><h2>Klarheit</h2><p>Jede §30-Maßnahme bekommt Status, Owner und nächsten Schritt — keine grüne Ampel ohne hinterlegte Evidenz.</p></div>
+        <div class="card blue"><h2>Entlastung</h2><p>Geschäftsführung sieht Risiko und Freigaben, ohne selbst ISMS-Expertin zu werden.</p></div>
+        <div class="card green"><h2>Wiederverwendung</h2><p>Ein Nachweis bedient §30-Dokumentation, Management-Report und Kundenfragebogen zugleich.</p></div>
+      </div>
+      <p class="big-quote">Ein Nachweis — dreimal nutzbar.</p>
+      <div class="source-row"><span class="source">Promise Boundary: keine Rechtsberatung</span><span class="source">Evidence-Readiness statt Compliance-Garantie</span></div>
+    </section>
+
+    <!-- 06 PRODUKT & ALLEINSTELLUNG -->
+    <section class="slide" data-title="Produkt">
+      <div class="top"><div class="kicker">Punkt <b>03</b> · Produkt &amp; Alleinstellung</div><div class="top-right"><div class="method">USP</div><div class="chapter blue">Demoable</div></div></div>
+      <h1>Ein Evidence Room statt GRC-Monster.</h1>
+      <div class="map">
+        <div class="tile"><strong>01</strong><h3>Betroffenheit</h3><span>C26-C30, Größe, Umsatz, Legal-Review-Flag.</span></div>
+        <div class="tile"><strong>02</strong><h3>§30 Gap Map</h3><span>Zehn Maßnahmen als Aufgaben, Owner und Nachweise.</span></div>
+        <div class="tile"><strong>03</strong><h3>Evidence Room</h3><span>Dokumente, Status, Review-Datum, Quelle.</span></div>
+        <div class="tile"><strong>04</strong><h3>GF Cockpit</h3><span>Readiness, Risiken, Freigaben, Schulung.</span></div>
+        <div class="tile"><strong>05</strong><h3>Fragebogen</h3><span>Kundenfragen aus belegter Evidenz beantworten.</span></div>
+      </div>
+      <div class="grid3" style="margin-top:20px">
+        <div class="card orange"><h3>USP 1</h3><h2>Manufacturing-Tiefe</h2><p>Sprache, §30-Beispiele und Templates sind auf C26-C30 zugeschnitten — kein generisches Multi-Framework-Tool.</p></div>
+        <div class="card blue"><h3>USP 2</h3><h2>Nachweis vor Ampel</h2><p>Kein Status ohne hinterlegte Evidenz. Das macht Reports prüf- und auditfest.</p></div>
+        <div class="card green"><h3>USP 3</h3><h2>Systemhaus-fähig</h2><p>Multi-Mandanten-Logik von Anfang an — der Kanal ist eingebaut, nicht nachgerüstet.</p></div>
+      </div>
+      <div class="source-row"><span class="source">Promise Boundary: keine Rechtsberatung</span><span class="source">Produktdatei: demo.html</span></div>
+    </section>
+
+    <!-- 07 LIVE DEMO -->
+    <section class="slide" data-title="Live Demo">
+      <div class="top"><div class="kicker">Punkt <b>03</b> · Live Product Demo</div><div class="top-right"><div class="chapter blue">Interaktiv</div></div></div>
+      <div class="demo-shell">
+        <div class="demo-copy">
+          <div class="card orange"><h2>Demo-Moment</h2><p>Zeige maximal 60 Sekunden: §30 Gap Map → Evidence Room → Fragebogen-Builder → Systemhaus View.</p></div>
+          <div class="card"><h3>Was hängen bleibt</h3><p>Das Produkt sieht nicht aus wie ein abstrakter Pitch. Es wirkt wie ein echter Workspace für NIS2-Nachweise.</p></div>
+          <div class="demo-actions">
+            <button class="btn" onclick="openDemo()">Demo in neuem Tab</button>
+            <button class="btn secondary" onclick="focusDemo('gapmap')">§30 zeigen</button>
+            <button class="btn secondary" onclick="focusDemo('builder')">Fragebogen zeigen</button>
+          </div>
+        </div>
+        <div class="demo-frame-wrap">
+          <iframe id="demoFrame" src="demo.html" title="NIS2 Evidence Room Produktdemo"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 GESCHAEFTSMODELL -->
+    <section class="slide" data-title="Geschäftsmodell">
+      <div class="top"><div class="kicker">Punkt <b>04</b> · Geschäftsmodell</div><div class="top-right"><div class="method">Lean / Business Model Canvas</div><div class="chapter model">Hypothese</div></div></div>
+      <h1>Laufende Pflicht — laufender Umsatz.</h1>
+      <p class="small muted" style="margin-top:8px;max-width:1000px">Was wird an wen verkauft: ein <b>wiederkehrendes SaaS-Abo</b> an C26-C30-Hersteller, plus eine <b>Partner-Lizenz</b> an IT-Systemhäuser. NIS2 ist keine Einmalaufgabe — also ist es kein Einmalverkauf.</p>
+      <div class="pricewrap">
+        <div class="tier"><span class="tname">Starter</span><div class="tprice">149&thinsp;<span>EUR/Monat</span></div><div class="tdesc">Evidence Room + §30 Gap Map für ein Unternehmen.</div><span class="tfor">Einstieg · Self-Serve</span></div>
+        <div class="tier feat"><span class="tname">Pro</span><div class="tprice">299&thinsp;<span>EUR/Monat</span></div><div class="tdesc">Zusätzlich Fragebogen-Builder und Management-Reports.</div><span class="tfor">Kern-Tarif · Referenzpreis</span></div>
+        <div class="tier"><span class="tname">Partner</span><div class="tprice">799&thinsp;<span>EUR/Monat</span></div><div class="tdesc">Systemhaus-Multi-Mandanten-Dashboard + 99 EUR je Mandant.</div><span class="tfor">Kanal · Skalierung</span></div>
+      </div>
+      <div class="grid4" style="margin-top:18px">
+        <div class="card"><h3>Einnahmen</h3><p class="small">Abo (MRR), Setup 750-2.500 EUR, Partner-Lizenz, Per-Mandant-Fee.</p></div>
+        <div class="card"><h3>Schlüssel-Ressource</h3><p class="small">Manufacturing-Templates, Regulierungs-Monitoring, Evidenz-Daten.</p></div>
+        <div class="card"><h3>Kanäle</h3><p class="small">Gratis-Betroffenheitscheck als Funnel, Systemhaus-Partner.</p></div>
+        <div class="card"><h3>Kostentreiber</h3><p class="small">Produktentwicklung, GTM, Recht/Advisory, Infrastruktur.</p></div>
+      </div>
+      <div class="source-row"><span class="source">Preise: Test-Hypothese, nicht validiert</span><span class="source">Referenzpreis Szenariorechnung: 299 EUR/Monat</span></div>
+    </section>
+
+    <!-- 09 MARKT & BEACHHEAD -->
+    <section class="slide" data-title="Markt & Beachhead">
+      <div class="top"><div class="kicker">Punkt <b>05</b> · Markt &amp; Beachhead</div><div class="top-right"><div class="method">Marktgrößen-Schätzung</div><div class="chapter model">Schätzung</div></div></div>
+      <h1>Der erste Markt ist jetzt grob messbar.</h1>
+      <div class="grid3" style="margin-top:22px">
+        <div class="card"><div class="label green"><span class="dot"></span>BSI</div><div class="metric small">29,5k</div><p>Regulatorischer Gesamtumfang. Wichtig: nicht als direkter TAM verkaufen.</p></div>
+        <div class="card"><div class="label green"><span class="dot"></span>Eurostat</div><div class="metric small">4.143</div><p>C26-C30 Unternehmen mit 50-249 persons employed, Deutschland 2024, provisional.</p></div>
+        <div class="card yellow"><div class="label yellow"><span class="dot"></span>Modell</div><div class="metric small">4,1-4,6k</div><p>Pitch-safe Beachhead-Range nach Eurostat/Destatis-Reconciliation.</p></div>
+      </div>
+      <table style="margin-top:18px"><tr><th style="width:18%">Ebene</th><th>Logik</th><th style="width:30%">Disziplin</th></tr>
+        <tr><td><strong>TAM</strong></td><td>BSI nennt ca. 29.500 betroffene Einrichtungen über 18 Sektoren.</td><td>Gesamt-Scope — kein adressierbarer Markt.</td></tr>
+        <tr><td><strong>Beachhead</strong></td><td>C26-C30: Elektronik, elektrische Ausrüstung, Maschinenbau, Automotive, sonstiger Fahrzeugbau (BSIG Anlage 2).</td><td>Grob 4.100-4.600 mittelgroße Hersteller — als Schätzung gelabelt.</td></tr></table>
+      <div class="source-row"><span class="source">Eurostat SBS_SC_OVW</span><span class="source">Destatis Unternehmensregister 2024</span><span class="source">BSIG Anlage 2</span></div>
+    </section>
+
+    <!-- 10 WETTBEWERB & WEDGE -->
+    <section class="slide" data-title="Wettbewerb & Wedge">
+      <div class="top"><div class="kicker">Punkt <b>05</b> · Wettbewerb &amp; strategischer Wedge</div><div class="top-right"><div class="method">Porter — Wettbewerbsstrategie</div><div class="chapter risk">Crowded</div></div></div>
+      <h1>Der Markt ist nicht leer. Deshalb wird der Wedge eng.</h1>
+      <div class="grid2" style="margin-top:20px;align-items:start">
+        <table><tr><th>Alternative</th><th>Stärke</th></tr>
+          <tr><td><strong>SECJUR / activeMind</strong></td><td>Guided NIS2, Audit Readiness, Templates, Dashboards.</td></tr>
+          <tr><td><strong>DataGuard / heyData</strong></td><td>Breite Compliance-Plattformen mit Trust und Support.</td></tr>
+          <tr><td><strong>Systemhäuser</strong></td><td>Kundenzugang und Vertrauen, NIS2-Einstiegsworkshops.</td></tr>
+          <tr><td><strong>Excel + Beratung</strong></td><td>Status quo — günstig im Einstieg, aber kein System.</td></tr></table>
+        <div class="stack">
+          <div class="card orange"><h2>Fokus-Tradeoff</h2><p>Incumbents sind breit (DSGVO + ISO + NIS2 + AI Act). Genau diese Breite können sie nicht gegen eine Manufacturing-Nische verteidigen, ohne ihr Profil zu verwässern.</p></div>
+          <div class="card green"><h2>Unsere Position</h2><p>Schmal statt breit: NIS2-only + C26-C30-only + Systemhaus-Kanal. Der Wedge ist Fokus + Workflow + Kanal — keine Feature-Magie.</p></div>
+        </div>
+      </div>
+      <p class="small muted" style="margin-top:14px;max-width:1040px">Theoriebezug Porter: Wettbewerbsvorteil entsteht durch eine bewusste Aktivitäten-Wahl mit klarem <b>Tradeoff</b> — eng schlägt breit, wenn die Nische gut bedient wird.</p>
+      <div class="source-row"><span class="source">Competitor Snapshot 2026-05-19</span><span class="source">Nicht behaupten: Blue Ocean</span></div>
+    </section>
+
+    <!-- 11 MARKETING & VERTRIEB -->
+    <section class="slide" data-title="Marketing & Vertrieb">
+      <div class="top"><div class="kicker">Punkt <b>06</b> · Marketing &amp; Vertrieb</div><div class="top-right"><div class="method">STP &amp; 4 Ps</div><div class="chapter model">Plan</div></div></div>
+      <h1>Schmal zielen. Über den Kanal skalieren.</h1>
+      <div class="grid2" style="margin-top:18px;align-items:start">
+        <div class="card blue">
+          <h3>STP — Segmentation · Targeting · Positioning</h3>
+          <p class="small"><b>Segment:</b> deutsche C26-C30-Hersteller, 50-249 MA, neu NIS2-betroffen.<br>
+          <b>Target:</b> Geschäftsführung ohne CISO — entscheidet und haftet.<br>
+          <b>Positioning:</b> „Der spezialisierte NIS2-Nachweisraum für Manufacturing — kein generisches GRC."</p>
+        </div>
+        <div class="card yellow">
+          <h3>SMARTe Ziele <span class="muted small">(Hypothese)</span></h3>
+          <p class="small">6 Monate: 20 Discovery-Interviews + 1 Systemhaus-Pilot.<br>
+          12 Monate: 25 zahlende Kunden im Beachhead.<br>
+          18 Monate: 3-5 aktive Systemhaus-Partner.</p>
+        </div>
+      </div>
+      <div class="grid4" style="margin-top:16px">
+        <div class="card"><h3>Produkt</h3><p class="small">Geführter Evidence Room mit Manufacturing-Templates.</p></div>
+        <div class="card"><h3>Preis</h3><p class="small">SaaS-Abo 149-799 EUR statt fünf-/sechsstelliger Beratung.</p></div>
+        <div class="card orange"><h3>Vertrieb</h3><p class="small">Zweigleisig: Gratis-Betroffenheitscheck als Funnel + Systemhaus-White-Label/Referral als Hauptkanal.</p></div>
+        <div class="card"><h3>Kommunikation</h3><p class="small">Vertical Content (NIS2 für Maschinenbau), IHK-/VDMA-nahe Kanäle, Systemhaus-Co-Marketing.</p></div>
+      </div>
+      <div class="source-row"><span class="source">Marketing-Mix nach Unit 6</span><span class="source">Hauptkanal-Hypothese: Systemhaus — noch zu validieren</span></div>
+    </section>
+
+    <!-- 12 ROADMAP -->
+    <section class="slide" data-title="Roadmap">
+      <div class="top"><div class="kicker">Punkt <b>07</b> · Strategische Roadmap</div><div class="top-right"><div class="method">Meilenstein-Planung</div><div class="chapter model">Ambition</div></div></div>
+      <h1>Erst validieren. Dann bauen. Dann skalieren.</h1>
+      <div class="road">
+        <div class="step"><span class="when">Q3 2026</span><div class="num">01</div><h3>Validierung</h3><p>8-10 Hersteller- und 5 Systemhaus-Interviews. Gate: TEST FIRST.</p></div>
+        <div class="step"><span class="when">Q4 2026</span><div class="num">02</div><h3>MVP-Build</h3><p>§30 Gap Map, Evidence Room, GF Cockpit als nutzbares Produkt.</p></div>
+        <div class="step"><span class="when">Q1 2027</span><div class="num">03</div><h3>Erste Piloten</h3><p>3-5 zahlende C26-C30-Pilotkunden, Fragebogen-Builder live.</p></div>
+        <div class="step"><span class="when">Q2-Q3 2027</span><div class="num">04</div><h3>Partner-OS</h3><p>Erste Systemhaus-Partner, Multi-Mandanten-Reviews und Reports.</p></div>
+        <div class="step"><span class="when">ab 2028</span><div class="num">05</div><h3>Expansion</h3><p>Supplier Evidence Exchange, weitere Anlage-2-Sektoren.</p></div>
+      </div>
+      <div class="timeaxis"><span>Validieren</span><div class="bar"></div><span>Skalieren</span></div>
+      <p class="small muted" style="margin-top:12px;max-width:1040px">Regel: Expansion erst nach validiertem Wedge. Kein Schritt 04, bevor Schritt 01 das Kill-Kriterium überlebt hat.</p>
+      <div class="source-row"><span class="source">Scale Roadmap</span><span class="source">Ambition, kein validierter Forecast</span></div>
+    </section>
+
+    <!-- 13 FINANZEN -->
+    <section class="slide" data-title="Finanzen">
+      <div class="top"><div class="kicker">Punkt <b>08</b> · Finanzen — Umsatz &amp; Kosten</div><div class="top-right"><div class="method">Finanzplan · GuV-Logik</div><div class="chapter model">Szenario</div></div></div>
+      <h1>Klein genug für Fokus. Groß genug für SaaS.</h1>
+      <div class="grid4" style="margin-top:18px">
+        <div class="card"><h2>1%</h2><div class="metric small">147-165k</div><p class="small">EUR ARR · 41-46 Kunden.</p></div>
+        <div class="card"><h2>3%</h2><div class="metric small">445-492k</div><p class="small">EUR ARR · 124-137 Kunden.</p></div>
+        <div class="card"><h2>7%</h2><div class="metric small">1,04-1,14M</div><p class="small">EUR ARR · 290-319 Kunden.</p></div>
+        <div class="card"><h2>10%</h2><div class="metric small">1,49-1,63M</div><p class="small">EUR ARR · 414-455 Kunden.</p></div>
+      </div>
+      <div class="grid2" style="margin-top:16px;align-items:start">
+        <div class="card">
+          <h3>Kostenstruktur Jahr 1 <span class="muted small">(Modell, ca. 225k EUR)</span></h3>
+          <p class="small">Produktentwicklung / MVP-Build &nbsp;~90k<br>
+          Gründer-Minimalvergütung (3 Personen) &nbsp;~85k<br>
+          Vertrieb &amp; Marketing &nbsp;~22k<br>
+          Recht, Advisory &amp; Gründung &nbsp;~18k<br>
+          Infrastruktur &amp; Tools &nbsp;~10k</p>
+        </div>
+        <div class="card green">
+          <h3>Break-even</h3>
+          <div class="metric small" style="color:var(--green)">~75 Kunden</div>
+          <p class="small">Bei 299 EUR/Monat (≈ 3.588 EUR ARR/Kunde) deckt ein Kundenstamm von rund 75 die laufende Run-Rate aus Jahr 2 — das sind <b>unter 2%</b> des Beachheads. Erreichbar im 3%-Basisszenario.</p>
+        </div>
+      </div>
+      <table style="margin-top:14px"><tr><th>GuV-Orientierung (Annahme)</th><th>Jahr 1</th><th>Jahr 2</th><th>Jahr 3</th></tr>
+        <tr><td><strong>ARR</strong></td><td>~60-90k</td><td>~230-320k</td><td>~500-640k</td></tr>
+        <tr><td><strong>Kosten</strong></td><td>~225k</td><td>~270k</td><td>~370k</td></tr>
+        <tr><td><strong>Ergebnis</strong></td><td>negativ — Aufbaujahr</td><td>nahe Break-even</td><td>positiv</td></tr></table>
+      <div class="source-row"><span class="source">Beachhead Estimate</span><span class="source">Kosten-Benchmark: Freelancer-Kompass 2025 · Gründergehalt-Report</span><span class="source">Szenariorechnung, keine Prognose</span></div>
+    </section>
+
+    <!-- 14 FINANZIERUNG -->
+    <section class="slide" data-title="Finanzierung">
+      <div class="top"><div class="kicker">Punkt <b>08</b> · Finanzierung — der Bedarf</div><div class="top-right"><div class="method">Finanzierungslücke</div><div class="chapter model">Annahme</div></div></div>
+      <h1>Was wir brauchen, um den Wedge zu beweisen.</h1>
+      <div class="grid2" style="margin-top:22px;align-items:stretch">
+        <div class="card ink" style="display:flex;flex-direction:column;justify-content:center">
+          <h3 style="color:var(--orange)">Finanzierungsbedarf · Pre-Seed</h3>
+          <div class="metric" style="color:var(--paper)">250k</div>
+          <p style="color:#cdd3dc">EUR für ca. 13 Monate Runway — von der Validierung bis zu erster belastbarer Recurring Revenue.</p>
+        </div>
+        <div class="stack">
+          <div class="card"><h3>Mittelverwendung (250k EUR)</h3>
+            <p class="small">Produktentwicklung / MVP &nbsp;<b>36%</b><br>
+            Gründer-Minimalvergütung &nbsp;<b>34%</b><br>
+            GTM &amp; Systemhaus-Aufbau &nbsp;<b>9%</b><br>
+            Recht, Advisory &amp; Gründung &nbsp;<b>7%</b><br>
+            Infrastruktur &amp; Puffer &nbsp;<b>14%</b></p>
+          </div>
+          <div class="card green"><h3>Meilenstein bis Tragfähigkeit</h3><p class="small">Validierter Wedge, 3-5 zahlende Piloten und 1-2 Systemhaus-Partner — die Schwelle, ab der die nächste Runde oder der Cashflow das Wachstum trägt.</p></div>
+        </div>
+      </div>
+      <p class="small muted" style="margin-top:16px;max-width:1080px"><b>Benchmark-Einordnung:</b> 250k liegt am unteren Rand der DACH-Pre-Seed-Range (~250k-1,5M EUR, Median ~600k) — bewusst kapitaleffizient. Die Gründervergütung liegt klar unter dem Pre-Seed-Benchmark von 50-75k EUR je Founder; diese Differenz ist unser Sweat-Equity-Beitrag.</p>
+      <div class="source-row"><span class="source">Benchmark: DACH-Pre-Seed-Rundengrößen 2025</span><span class="source">Betrag: kapitaleffiziente Planungsannahme</span></div>
+    </section>
+
+    <!-- 15 TEAM -->
+    <section class="slide" data-title="Team">
+      <div class="top"><div class="kicker">Punkt <b>09</b> · Team</div><div class="top-right"><div class="method">Kompetenz-Abdeckung</div><div class="chapter ok">Gründerteam</div></div></div>
+      <h1>Drei Rollen. Produkt, Markt, Finanzen.</h1>
+      <div class="team-grid">
+        <div class="member">
+          <div class="avatar">NK</div>
+          <div>
+            <div class="mname">Noa Katana</div>
+            <div class="mrole">Produkt &amp; Geschäftsführung</div>
+          </div>
+          <div class="mtask">Verantwortet Produktvision, Compliance-Logik und die Live-Demo — übersetzt §30 BSIG in nutzbare Workflows.</div>
+          <div class="mstrength"><b>Stärke</b>Digitales Produktdenken und Medien-/Content-Erfahrung — macht ein Regulierungsthema verständlich und greifbar.</div>
+        </div>
+        <div class="member">
+          <div class="avatar">LJ</div>
+          <div>
+            <div class="mname">Laurids Jervelund</div>
+            <div class="mrole">Markt &amp; Go-to-Market</div>
+          </div>
+          <div class="mtask">Verantwortet Marktanalyse, Wettbewerbsrecherche, Discovery-Interviews und den Aufbau des Systemhaus-Kanals.</div>
+          <div class="mstrength"><b>Stärke</b>Strukturierte Marktrecherche und Gespür für B2B-Vertriebslogik — treibt die Primärvalidierung.</div>
+        </div>
+        <div class="member">
+          <div class="avatar">JB</div>
+          <div>
+            <div class="mname">Johannes Burkhardt</div>
+            <div class="mrole">Finanzen &amp; Geschäftsmodell</div>
+          </div>
+          <div class="mtask">Verantwortet Finanzplanung, Pricing-Modellierung, Szenariorechnung und die Finanzierungslogik.</div>
+          <div class="mstrength"><b>Stärke</b>Zahlen- und Modellkompetenz — hält die Annahmen ambitioniert, aber realistisch.</div>
+        </div>
+      </div>
+      <div class="card yellow" style="margin-top:16px"><h3>Schlanke Organisation · offene Schlüsselpositionen</h3><p class="small">Drei Gründer decken Produkt, Markt und Finanzen ab — die erste Einstellung folgt erst nach validiertem Wedge. Geplant: <b>NIS2-Rechts-/Compliance-Advisor</b> (Haftungsabsicherung, Legal-Review-Checkpoints), später <b>Systemhaus-Partnerships Lead</b> und <b>Senior Security-Engineer</b> für den sicheren Produktausbau.</p></div>
+      <div class="source-row"><span class="source">Gründerteam Macromedia</span><span class="source">Personalplanung: Lean — Einstellung nach Validierung</span></div>
+    </section>
+
+    <!-- 16 VALIDIERUNG -->
+    <section class="slide" data-title="Validierung">
+      <div class="top"><div class="kicker">Vorgehen · Validierung</div><div class="top-right"><div class="method">Lean Startup · Mom-Test</div><div class="chapter model">TEST FIRST</div></div></div>
+      <h1>Vor Build: drei Tests, keine Fantasie.</h1>
+      <div class="grid3" style="margin-top:24px">
+        <div class="card"><h2>Käuferpain</h2><p>8-10 Herstellerinterviews. Beweis: konkrete vergangene NIS2-Aufgabe, nicht höfliches Interesse.</p></div>
+        <div class="card"><h2>Zahlungsbereitschaft</h2><p>Demo plus Preisanker. Beweis: Pilot, LOI, Budgetprozess oder klarer Next Step.</p></div>
+        <div class="card"><h2>Kanal</h2><p>5 Systemhaus-Gespräche. Beweis: Referral oder White-Label-Test mit echtem Mandanten.</p></div>
+      </div>
+      <div class="card red" style="margin-top:22px"><h2>Kill-Kriterium</h2><p>Wenn Firmen schon sauber über Beratung/Systemhaus gelöst haben oder Systemhäuser die Partnerlogik ablehnen — dann nicht bauen.</p></div>
+      <div class="source-row"><span class="source">Mom-Test: Vergangenheit statt Meinung</span><span class="source">Decision: TEST FIRST · Primary Validation pending</span></div>
+    </section>
+
+    <!-- 17 PROOF DISCIPLINE -->
+    <section class="slide" data-title="Proof-Disziplin">
+      <div class="top"><div class="kicker">Vorgehen · Proof-Disziplin</div><div class="top-right"><div class="chapter risk">No-Go</div></div></div>
+      <h1>Was wir bewusst nicht sagen.</h1>
+      <div class="risk-list">
+        <div class="card red"><h2>Nicht behaupten</h2><p>Wir garantieren Compliance. 29.500 ist unser TAM. Niemand bietet guided NIS2. Primary Validation ist erledigt. „61% missed registration" als harter Main-Claim.</p></div>
+        <div class="card green"><h2>Stattdessen sagen</h2><p>Wir machen Nachweise operationalisierbar. Der Beachhead ist grob messbar. Der Markt ist crowded. Der Scale-Path läuft über Systemhäuser und Supplier Evidence.</p></div>
+      </div>
+      <p class="small muted" style="margin-top:16px;max-width:1040px">Diese Disziplin ist Teil des Konzepts: ehrliche Claim-Grenzen schützen vor Haftungsrisiko und machen den Pitch glaubwürdiger — nicht schwächer.</p>
+      <div class="source-row"><span class="source">Evidence Matrix Deutsch</span><span class="source">Proof-first Pitch</span></div>
+    </section>
+
+    <!-- 18 CLOSE -->
+    <section class="slide" data-title="Close">
+      <div class="top"><div class="kicker">Abschluss · Call to Action</div><div class="top-right"><div class="chapter ok">Pitch Line</div></div></div>
+      <h1>Schmal starten. Wiederholbar skalieren.</h1>
+      <p class="lede">NIS2 Evidence Room beginnt als enger Nachweisraum für C26-C30-Mittelstand. Zieht der Wedge, wird daraus ein wiederholbarer Evidence-Layer für Systemhäuser, Lieferantenfragebögen und weitere regulierte Sektoren.</p>
+      <div class="grid3" style="margin-top:24px">
+        <div class="card orange"><h2>Warum jetzt?</h2><p>Offizielle Pflichten, konkrete Nachweise, Management-Verantwortung — eine erzwungene Adoption.</p></div>
+        <div class="card blue"><h2>Warum wir?</h2><p>Fokus auf Evidenz-Workflow statt generisches GRC — und ein Team, das Produkt, Markt und Finanzen abdeckt.</p></div>
+        <div class="card green"><h2>Was wir suchen?</h2><p>250k EUR Pre-Seed plus Zugang zu Manufacturing-Herstellern und IT-Systemhäusern für die Validierung.</p></div>
+      </div>
+      <div class="source-row"><span class="source">Demo öffnen: D</span><span class="source">Fullscreen: F</span><span class="source">Handout: H</span><span class="source">Drucken/PDF: P</span></div>
+    </section>
+
+  </main>
+</div>
+<div class="footer-help">←/→ oder ↑/↓ · F Fullscreen · H Scroll · D Demo · P Drucken</div>
+<div class="toast" id="toast"></div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const progress=document.getElementById('progressFill');
+const countText=document.getElementById('countText');
+let current=0;
+function pad(n){return String(n).padStart(2,'0')}
+function show(i){
+  current=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,idx)=>{s.classList.toggle('active',idx===current);s.classList.toggle('prev',idx<current)});
+  progress.style.height=((current+1)/slides.length*100)+'%';
+  countText.textContent=`${pad(current+1)} / ${pad(slides.length)}`;
+  history.replaceState(null,'',`#${pad(current+1)}-${(slides[current].dataset.title||'slide').toLowerCase().replace(/[^a-z0-9]+/g,'-')}`);
+}
+function next(){show(current+1)}
+function prev(){show(current-1)}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';clearTimeout(window._toastT);window._toastT=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(24px)'},1800)}
+function toggleHandout(){document.documentElement.classList.toggle('handout');toast(document.documentElement.classList.contains('handout')?'Endless Scroll aktiv':'Slide-Modus aktiv')}
+function fullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()}
+function openDemo(){window.open('demo.html','_blank','noopener')}
+function focusDemo(screen){
+  const f=document.getElementById('demoFrame');
+  show(6);
+  try{f.contentWindow?.go?.(screen);toast(`Demo: ${screen}`)}catch(e){toast('Demo im Frame geladen')}
+}
+document.getElementById('nextBtn').addEventListener('click',next);
+document.getElementById('prevBtn').addEventListener('click',prev);
+document.getElementById('modeBtn').addEventListener('click',toggleHandout);
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();next()}
+  if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+  if(e.key.toLowerCase()==='f')fullscreen();
+  if(e.key.toLowerCase()==='h')toggleHandout();
+  if(e.key.toLowerCase()==='d')openDemo();
+  if(e.key.toLowerCase()==='p')window.print();
+  if(e.key==='Home')show(0);
+  if(e.key==='End')show(slides.length-1);
+});
+const hashIndex=(location.hash.match(/^#(\d+)/)||[])[1];
+show(hashIndex?Number(hashIndex)-1:0);
+</script>
+</body>
+</html>

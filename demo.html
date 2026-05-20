@@ -1,0 +1,1278 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIS2 Evidence Room — Produkt-Demo</title>
+<style>
+:root{
+  --ink:#0e1116;
+  --ink-soft:#2a2f3a;
+  --muted:#6b7280;
+  --paper:#f4f1ea;
+  --panel:#fffdf8;
+  --line:#0e1116;
+  --orange:#ff5a1f;
+  --blue:#1647ff;
+  --green:#0f8a5f;
+  --yellow:#ffd166;
+  --red:#d4351c;
+  --nav:#0e1116;
+  --nav-soft:#1a1f29;
+  --shadow:6px 6px 0 rgba(14,17,22,.16);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  font-family:"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  font-size:14px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"SF Mono",ui-monospace,"Roboto Mono",Menlo,Consolas,monospace;}
+
+/* ---- shell ---- */
+.shell{display:grid;grid-template-columns:248px 1fr;min-height:100vh;}
+
+/* ---- sidebar ---- */
+.sidebar{
+  background:var(--nav);
+  color:#f4f1ea;
+  display:flex;flex-direction:column;
+  border-right:3px solid var(--line);
+  position:sticky;top:0;height:100vh;
+}
+.brand{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.12);}
+.brand .mark{
+  display:inline-flex;align-items:center;gap:8px;
+  font-weight:800;letter-spacing:.02em;font-size:15px;text-transform:uppercase;
+}
+.brand .glyph{
+  width:26px;height:26px;background:var(--orange);
+  border:2px solid #f4f1ea;display:grid;place-items:center;
+  font-weight:900;font-size:13px;color:#0e1116;
+}
+.brand .sub{
+  margin-top:8px;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:#8b93a3;
+}
+.navlist{padding:14px 12px;flex:1;overflow-y:auto;}
+.navsec{
+  font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:#6b7280;padding:14px 10px 6px;
+}
+.navitem{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;margin:2px 0;cursor:pointer;
+  border-left:3px solid transparent;
+  font-size:12.5px;font-weight:600;color:#cfd4dd;
+  user-select:none;transition:background .12s;
+}
+.navitem:hover{background:var(--nav-soft);}
+.navitem.active{
+  background:var(--nav-soft);border-left-color:var(--orange);color:#fff;
+}
+.navitem .idx{
+  font-family:"SF Mono",ui-monospace,monospace;
+  font-size:10px;color:#6b7280;width:14px;
+}
+.navitem.active .idx{color:var(--orange);}
+.navitem .tag{
+  margin-left:auto;font-size:9px;font-weight:800;
+  padding:2px 5px;border-radius:2px;letter-spacing:.04em;
+}
+.tag.scale{background:var(--blue);color:#fff;}
+.navfoot{
+  padding:14px 18px;border-top:1px solid rgba(255,255,255,.12);
+  font-size:9.5px;color:#6b7280;line-height:1.5;
+}
+
+/* ---- main ---- */
+.main{display:flex;flex-direction:column;min-width:0;}
+.statusbar{
+  display:flex;align-items:center;gap:18px;
+  padding:13px 28px;background:#fff;
+  border-bottom:3px solid var(--line);
+  position:sticky;top:0;z-index:20;
+}
+.co{display:flex;flex-direction:column;}
+.co .name{font-weight:800;font-size:14px;}
+.co .meta{font-size:10.5px;color:var(--muted);letter-spacing:.02em;}
+.sb-div{width:1px;height:30px;background:#d8d3c8;}
+.sb-metric{display:flex;flex-direction:column;}
+.sb-metric .k{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);}
+.sb-metric .v{font-weight:800;font-size:14px;font-family:"SF Mono",ui-monospace,monospace;}
+.sb-spacer{flex:1;}
+.sb-pill{
+  font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+  padding:5px 9px;border:2px solid var(--line);background:var(--yellow);
+}
+.sb-disc{font-size:10px;color:var(--muted);max-width:230px;line-height:1.35;}
+
+/* ---- screens ---- */
+.screen{display:none;padding:28px 32px 60px;animation:fade .18s ease;}
+.screen.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+.crumb{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px;
+}
+.h-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:4px;}
+h1{font-size:27px;line-height:1.05;letter-spacing:-.5px;font-weight:800;}
+.lede{font-size:13px;color:var(--ink-soft);max-width:680px;margin:8px 0 22px;}
+
+/* generic blocks */
+.card{
+  background:var(--panel);border:2.5px solid var(--line);
+  box-shadow:var(--shadow);
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.sechead{
+  display:flex;align-items:center;gap:10px;
+  font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+  font-weight:800;margin:30px 0 12px;
+}
+.sechead::after{content:"";flex:1;height:2px;background:var(--line);}
+.sechead .num{
+  background:var(--line);color:var(--paper);
+  font-family:"SF Mono",ui-monospace,monospace;
+  padding:2px 7px;font-size:10px;
+}
+
+/* ---- screen 1: intake ---- */
+.intake-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:22px;align-items:start;}
+.formcard{padding:0;}
+.formcard .hd{
+  padding:13px 18px;border-bottom:2.5px solid var(--line);
+  font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.formcard .hd .step{
+  font-family:"SF Mono",ui-monospace,monospace;font-size:10px;
+  color:var(--muted);text-transform:none;letter-spacing:0;
+}
+.frow{
+  display:grid;grid-template-columns:170px 1fr;
+  border-bottom:1px dashed #cdc7ba;
+}
+.frow:last-child{border-bottom:none;}
+.frow .lbl{
+  padding:11px 18px;font-size:11px;font-weight:700;
+  color:var(--ink-soft);background:rgba(244,241,234,.6);
+  border-right:1px dashed #cdc7ba;display:flex;align-items:center;
+}
+.frow .val{
+  padding:10px 18px;display:flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:600;
+}
+.frow .val .unit{font-size:10.5px;color:var(--muted);font-weight:500;}
+.editmark{
+  margin-left:auto;font-size:9px;color:var(--blue);
+  border:1.5px solid var(--blue);padding:2px 5px;font-weight:700;
+  cursor:pointer;letter-spacing:.04em;
+}
+.result{padding:0;}
+.result .verdict{
+  padding:18px;background:rgba(255,90,31,.1);
+  border-bottom:2.5px solid var(--line);
+}
+.result .vk{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+.result .vv{font-size:20px;font-weight:800;line-height:1.15;margin-top:5px;}
+.result .vv em{font-style:normal;color:var(--orange);}
+.classbar{display:flex;margin-top:14px;border:2px solid var(--line);}
+.classbar div{
+  flex:1;text-align:center;padding:7px 4px;font-size:9.5px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.03em;border-right:2px solid var(--line);
+}
+.classbar div:last-child{border-right:none;}
+.classbar .on{background:var(--orange);color:#fff;}
+.classbar .off{background:#fff;color:#b4afa3;}
+.reasons{padding:16px 18px;}
+.reasons li{
+  list-style:none;font-size:12px;padding:6px 0 6px 22px;position:relative;
+  border-bottom:1px dashed #e0daccc;
+}
+.reasons li:last-child{border-bottom:none;}
+.reasons li::before{
+  content:"+";position:absolute;left:0;top:6px;
+  color:var(--green);font-weight:900;
+}
+.reasons li.warn::before{content:"!";color:var(--red);}
+.flag{
+  margin-top:0;padding:14px 18px;
+  background:rgba(255,209,102,.4);border-top:2.5px solid var(--line);
+  font-size:11.5px;display:flex;gap:10px;
+}
+.flag .bang{
+  flex:none;width:22px;height:22px;background:var(--yellow);
+  border:2px solid var(--line);display:grid;place-items:center;
+  font-weight:900;
+}
+.next-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.na{padding:14px;cursor:pointer;transition:transform .1s;}
+.na:hover{transform:translate(-2px,-2px);}
+.na .nk{
+  font-family:"SF Mono",ui-monospace,monospace;font-size:10px;
+  color:var(--orange);font-weight:700;
+}
+.na .nt{font-weight:800;font-size:13px;margin:6px 0 4px;}
+.na .nd{font-size:11px;color:var(--muted);}
+
+/* ---- buttons / badges ---- */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 16px;border:2.5px solid var(--line);
+  background:var(--orange);color:#fff;font-weight:800;
+  font-size:12px;cursor:pointer;letter-spacing:.03em;
+  box-shadow:3px 3px 0 rgba(14,17,22,.25);
+}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(14,17,22,.25);}
+.btn.ghost{background:#fff;color:var(--ink);}
+.btn.blue{background:var(--blue);}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:9.5px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.04em;padding:3px 7px;border:1.5px solid var(--line);
+}
+.badge .led{width:7px;height:7px;border-radius:50%;border:1px solid var(--line);}
+.b-green{background:rgba(15,138,95,.16);}
+.b-green .led{background:var(--green);}
+.b-yellow{background:rgba(255,209,102,.5);}
+.b-yellow .led{background:var(--yellow);}
+.b-red{background:rgba(212,53,28,.14);}
+.b-red .led{background:var(--red);}
+.b-blue{background:rgba(22,71,255,.12);}
+.b-blue .led{background:var(--blue);}
+.b-gray{background:#ece8de;}
+.b-gray .led{background:#9b958a;}
+
+/* source labels */
+.sources{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px;}
+.src{
+  font-size:9.5px;font-weight:700;padding:4px 8px;
+  border:1.5px solid var(--line);background:#fff;
+  display:flex;align-items:center;gap:5px;
+}
+.src .dot{width:6px;height:6px;background:var(--blue);}
+.src.guard .dot{background:var(--orange);}
+
+/* ---- screen 2: gap map ---- */
+.gapstats{display:flex;gap:14px;margin-bottom:8px;}
+.gapstat{
+  flex:1;padding:13px 16px;border:2.5px solid var(--line);
+  background:var(--panel);box-shadow:var(--shadow);
+}
+.gapstat .gn{font-size:30px;font-weight:800;font-family:"SF Mono",ui-monospace,monospace;line-height:1;}
+.gapstat .gl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+.gapstat.s-green{border-bottom:6px solid var(--green);}
+.gapstat.s-yellow{border-bottom:6px solid var(--yellow);}
+.gapstat.s-red{border-bottom:6px solid var(--red);}
+.gapgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px;}
+.measure{
+  background:var(--panel);border:2.5px solid var(--line);
+  padding:12px;cursor:pointer;display:flex;flex-direction:column;
+  min-height:138px;transition:transform .1s;position:relative;
+}
+.measure:hover{transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(14,17,22,.2);}
+.measure.sel{box-shadow:4px 4px 0 var(--orange);transform:translate(-2px,-2px);}
+.measure .mtop{display:flex;justify-content:space-between;align-items:flex-start;}
+.measure .mno{
+  font-family:"SF Mono",ui-monospace,monospace;font-size:10px;
+  font-weight:700;color:#fff;background:var(--line);padding:2px 6px;
+}
+.measure .mled{width:11px;height:11px;border:2px solid var(--line);}
+.led-green{background:var(--green);}
+.led-yellow{background:var(--yellow);}
+.led-red{background:var(--red);}
+.measure .mtitle{
+  font-weight:800;font-size:12px;line-height:1.2;margin-top:9px;flex:1;
+}
+.measure .mowner{
+  font-size:9.5px;color:var(--muted);margin-top:6px;
+  display:flex;align-items:center;gap:4px;
+}
+.measure .mstatus{
+  font-size:9px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.04em;margin-top:8px;
+}
+.detail{
+  margin-top:18px;border:2.5px solid var(--line);
+  background:var(--panel);box-shadow:var(--shadow);display:none;
+}
+.detail.show{display:block;animation:fade .18s ease;}
+.detail .dhd{
+  display:flex;align-items:center;gap:12px;padding:15px 20px;
+  border-bottom:2.5px solid var(--line);background:var(--ink);color:var(--paper);
+}
+.detail .dhd .dno{
+  font-family:"SF Mono",ui-monospace,monospace;background:var(--orange);
+  color:#0e1116;font-weight:800;padding:3px 9px;font-size:12px;
+}
+.detail .dhd .dt{font-weight:800;font-size:16px;}
+.detail .dhd .dclose{
+  margin-left:auto;cursor:pointer;font-size:11px;font-weight:700;
+  border:1.5px solid var(--paper);padding:4px 9px;
+}
+.detail .dbody{display:grid;grid-template-columns:1.3fr 1fr;}
+.detail .dcol{padding:18px 20px;}
+.detail .dcol:first-child{border-right:2px dashed #cdc7ba;}
+.dlabel{
+  font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);font-weight:800;margin-bottom:5px;
+}
+.dtext{font-size:12.5px;margin-bottom:16px;}
+.dkv{display:flex;gap:8px;font-size:12px;padding:7px 0;border-bottom:1px dashed #e0dacc;}
+.dkv .dk{font-weight:700;width:120px;flex:none;color:var(--ink-soft);}
+.evlist{margin-top:6px;}
+.evlist .ev{
+  display:flex;align-items:center;gap:8px;font-size:11.5px;
+  padding:7px 0;border-bottom:1px dashed #e0dacc;
+}
+.evlist .ev .efile{font-family:"SF Mono",ui-monospace,monospace;font-size:11px;}
+.evlist .ev.miss .efile{color:var(--red);text-decoration:line-through;}
+.action-box{
+  margin-top:14px;padding:13px;background:rgba(255,90,31,.09);
+  border:2px solid var(--line);
+}
+.action-box .al{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--orange);font-weight:800;}
+.action-box .av{font-size:12.5px;font-weight:700;margin-top:4px;}
+
+/* ---- tables ---- */
+.tablewrap{border:2.5px solid var(--line);box-shadow:var(--shadow);background:var(--panel);overflow-x:auto;}
+table.evt{width:100%;border-collapse:collapse;font-size:12px;}
+table.evt th{
+  background:var(--ink);color:var(--paper);text-align:left;
+  font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:10px 12px;border-right:1px solid rgba(255,255,255,.15);
+}
+table.evt td{
+  padding:10px 12px;border-bottom:1px dashed #d4cebf;
+  border-right:1px dashed #d4cebf;vertical-align:middle;
+}
+table.evt tr:last-child td{border-bottom:none;}
+table.evt tbody tr{cursor:pointer;transition:background .1s;}
+table.evt tbody tr:hover{background:rgba(22,71,255,.05);}
+table.evt tbody tr.sel{background:rgba(255,90,31,.1);}
+.efname{font-weight:700;}
+.efmeta{font-family:"SF Mono",ui-monospace,monospace;font-size:10.5px;color:var(--muted);}
+.filterbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.chip{
+  font-size:10.5px;font-weight:700;padding:6px 11px;
+  border:2px solid var(--line);background:#fff;cursor:pointer;
+}
+.chip.active{background:var(--ink);color:var(--paper);}
+.chip .c-n{font-family:"SF Mono",ui-monospace,monospace;opacity:.65;margin-left:4px;}
+
+/* ---- screen 4: cockpit ---- */
+.cockpit-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:16px;}
+.score-card{padding:18px;}
+.score-card .sk{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-weight:800;}
+.score-ring{display:flex;align-items:center;gap:18px;margin-top:12px;}
+.ring{
+  width:108px;height:108px;border-radius:50%;flex:none;
+  background:conic-gradient(var(--orange) 0 46%,#e6e0d2 46% 100%);
+  display:grid;place-items:center;border:2.5px solid var(--line);
+}
+.ring .inner{
+  width:74px;height:74px;border-radius:50%;background:var(--panel);
+  border:2.5px solid var(--line);display:grid;place-items:center;
+  font-weight:800;font-size:24px;font-family:"SF Mono",ui-monospace,monospace;
+}
+.score-leg .row{display:flex;align-items:center;gap:8px;font-size:11.5px;padding:3px 0;}
+.score-leg .sw{width:11px;height:11px;border:1.5px solid var(--line);}
+.bigfig{padding:18px;display:flex;flex-direction:column;}
+.bigfig .bk{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800;}
+.bigfig .bn{font-size:46px;font-weight:800;font-family:"SF Mono",ui-monospace,monospace;line-height:1;margin:6px 0;}
+.bigfig.red .bn{color:var(--red);}
+.bigfig.orange .bn{color:var(--orange);}
+.bigfig .bd{font-size:11px;color:var(--muted);}
+.bigfig .blist{margin-top:8px;}
+.bigfig .blist span{
+  display:inline-block;font-size:9.5px;font-weight:700;
+  border:1.5px solid var(--line);padding:2px 6px;margin:2px 3px 0 0;
+}
+/* incident timeline */
+.timeline{padding:20px;}
+.tl-track{display:flex;align-items:flex-start;margin-top:18px;position:relative;}
+.tl-step{flex:1;position:relative;padding-top:30px;text-align:center;}
+.tl-step::before{
+  content:"";position:absolute;top:11px;left:0;right:0;height:4px;
+  background:var(--line);
+}
+.tl-step:first-child::before{left:50%;}
+.tl-step:last-child::before{right:50%;}
+.tl-node{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:26px;height:26px;border:3px solid var(--line);border-radius:50%;
+  background:#fff;display:grid;place-items:center;
+  font-size:10px;font-weight:800;font-family:"SF Mono",ui-monospace,monospace;
+}
+.tl-node.done{background:var(--green);color:#fff;}
+.tl-node.warn{background:var(--yellow);}
+.tl-node.open{background:#fff;}
+.tl-step .tl-when{font-weight:800;font-size:13px;}
+.tl-step .tl-what{font-size:10.5px;color:var(--muted);margin-top:2px;}
+.tl-step .tl-state{font-size:9px;font-weight:800;text-transform:uppercase;margin-top:6px;}
+.approvals{margin-top:0;}
+.appr-row{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;
+  border-bottom:1px dashed #d4cebf;
+}
+.appr-row:last-child{border-bottom:none;}
+.appr-row .at{font-weight:700;font-size:12.5px;flex:1;}
+.appr-row .ameta{font-size:10.5px;color:var(--muted);font-family:"SF Mono",ui-monospace,monospace;}
+
+/* ---- screen 5: questionnaire ---- */
+.qb{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}
+.qlist{padding:0;}
+.qlist .qlhd{
+  padding:12px 15px;border-bottom:2.5px solid var(--line);
+  font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+  display:flex;justify-content:space-between;
+}
+.qlist .qlhd .qsrc{font-weight:600;text-transform:none;letter-spacing:0;font-size:10px;color:var(--muted);}
+.qitem{
+  padding:12px 15px;border-bottom:1px dashed #d4cebf;cursor:pointer;
+  display:flex;gap:9px;transition:background .1s;
+}
+.qitem:last-child{border-bottom:none;}
+.qitem:hover{background:rgba(22,71,255,.05);}
+.qitem.sel{background:rgba(255,90,31,.1);border-left:3px solid var(--orange);}
+.qitem .qn{
+  font-family:"SF Mono",ui-monospace,monospace;font-size:10px;
+  font-weight:700;color:var(--muted);flex:none;
+}
+.qitem .qtxt{font-size:11.5px;font-weight:600;line-height:1.3;flex:1;}
+.qitem .qdot{width:9px;height:9px;border:1.5px solid var(--line);flex:none;margin-top:2px;}
+.answer{padding:0;}
+.answer .ahd{
+  padding:14px 20px;border-bottom:2.5px solid var(--line);
+  background:var(--ink);color:var(--paper);
+}
+.answer .ahd .aq{font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#8b93a3;}
+.answer .ahd .aqt{font-size:15px;font-weight:800;margin-top:5px;}
+.answer .abody{padding:20px;}
+.conf-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.conf-row .clabel{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800;}
+.draft{
+  border:2px solid var(--line);background:rgba(244,241,234,.65);
+  padding:14px;font-size:12.5px;line-height:1.5;
+}
+.draft .ref{
+  background:rgba(22,71,255,.14);border:1px solid var(--blue);
+  font-family:"SF Mono",ui-monospace,monospace;font-size:10.5px;
+  padding:1px 4px;font-weight:700;white-space:nowrap;
+}
+.evidence-used{margin-top:14px;}
+.eu-item{
+  display:flex;align-items:center;gap:8px;font-size:11.5px;
+  padding:7px 0;border-bottom:1px dashed #e0dacc;
+}
+.eu-item .efile{font-family:"SF Mono",ui-monospace,monospace;font-size:11px;}
+.qwarn{
+  margin-top:16px;padding:13px 15px;background:rgba(212,53,28,.1);
+  border:2px solid var(--line);border-left:6px solid var(--red);
+  font-size:11.5px;display:flex;gap:10px;
+}
+.qwarn.ok{background:rgba(15,138,95,.1);border-left-color:var(--green);}
+.qwarn .qb-i{
+  flex:none;width:20px;height:20px;border:2px solid var(--line);
+  display:grid;place-items:center;font-weight:900;background:#fff;
+}
+.qactions{margin-top:16px;display:flex;gap:10px;}
+
+/* ---- screen 6: partner ---- */
+.partner-banner{
+  background:var(--blue);color:#fff;border:2.5px solid var(--line);
+  box-shadow:var(--shadow);padding:16px 20px;display:flex;
+  align-items:center;gap:16px;margin-bottom:18px;
+}
+.partner-banner .pb-glyph{
+  width:42px;height:42px;background:#fff;border:2.5px solid var(--line);
+  display:grid;place-items:center;font-weight:900;font-size:18px;color:var(--blue);flex:none;
+}
+.partner-banner .pb-t{font-weight:800;font-size:15px;}
+.partner-banner .pb-d{font-size:11.5px;opacity:.9;margin-top:2px;}
+.partner-banner .btn{margin-left:auto;}
+.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+.pstat{padding:13px 15px;}
+.pstat .pn{font-size:26px;font-weight:800;font-family:"SF Mono",ui-monospace,monospace;line-height:1;}
+.pstat .pl{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+.client-readiness{display:flex;align-items:center;gap:8px;min-width:140px;}
+.rbar{flex:1;height:10px;border:1.5px solid var(--line);background:#fff;}
+.rbar .rfill{height:100%;}
+.rfill.hi{background:var(--green);}
+.rfill.mid{background:var(--yellow);}
+.rfill.lo{background:var(--red);}
+.rpct{font-family:"SF Mono",ui-monospace,monospace;font-weight:800;font-size:11px;width:34px;}
+
+/* footnote */
+.foot{
+  margin-top:34px;padding-top:14px;border-top:2px solid var(--line);
+  font-size:10px;color:var(--muted);line-height:1.5;
+}
+.scale-note{
+  margin-top:16px;padding:13px 16px;border:2px dashed var(--blue);
+  background:rgba(22,71,255,.06);font-size:11.5px;
+}
+.scale-note b{color:var(--blue);}
+
+@media (max-width:1180px){
+  .gapgrid{grid-template-columns:repeat(3,1fr);}
+  .pstats{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:980px){
+  .shell{grid-template-columns:1fr;}
+  .sidebar{position:static;height:auto;flex-direction:column;}
+  .navlist{display:flex;flex-wrap:wrap;}
+  .intake-grid,.grid2,.grid3,.cockpit-top,.qb,.detail .dbody{grid-template-columns:1fr;}
+  .gapgrid{grid-template-columns:repeat(2,1fr);}
+  .detail .dcol:first-child{border-right:none;border-bottom:2px dashed #cdc7ba;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark"><span class="glyph">N2</span><span>Evidence Room</span></div>
+      <div class="sub">NIS2 · Manufacturing Mittelstand</div>
+    </div>
+    <nav class="navlist">
+      <div class="navsec">Workspace · Müller Maschinenbau</div>
+      <div class="navitem active" data-screen="intake"><span class="idx">01</span> Betroffenheitscheck</div>
+      <div class="navitem" data-screen="gapmap"><span class="idx">02</span> §30 Gap Map</div>
+      <div class="navitem" data-screen="evidence"><span class="idx">03</span> Evidence Room</div>
+      <div class="navitem" data-screen="cockpit"><span class="idx">04</span> Management Cockpit</div>
+      <div class="navitem" data-screen="builder"><span class="idx">05</span> Fragebogen-Builder</div>
+      <div class="navsec">Skalierung</div>
+      <div class="navitem" data-screen="partner"><span class="idx">06</span> Systemhaus-Ansicht<span class="tag scale">Partner</span></div>
+      <div class="navsec">Wiederverwendung</div>
+      <div class="navitem" data-screen="builder"><span class="idx">→</span> Supplier-Evidence-Pakete</div>
+    </nav>
+    <div class="navfoot">
+      Demo-Workspace mit Beispieldaten.<br>
+      Kein Login · keine echten Daten · keine API.<br>
+      Stand 2026-05-19.
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- status bar -->
+    <div class="statusbar">
+      <div class="co">
+        <span class="name">Müller Maschinenbau GmbH</span>
+        <span class="meta">NACE C28 · 118 Mitarbeitende · Augsburg</span>
+      </div>
+      <div class="sb-div"></div>
+      <div class="sb-metric">
+        <span class="k">Einordnung</span>
+        <span class="v" style="font-size:11px;">Wichtige Einrichtung*</span>
+      </div>
+      <div class="sb-div"></div>
+      <div class="sb-metric">
+        <span class="k">§30 Readiness</span>
+        <span class="v">46&nbsp;%</span>
+      </div>
+      <div class="sb-div"></div>
+      <div class="sb-metric">
+        <span class="k">High-Risk Gaps</span>
+        <span class="v" style="color:var(--red);">3</span>
+      </div>
+      <div class="sb-spacer"></div>
+      <div class="sb-pill">Evidence-Readiness</div>
+      <div class="sb-disc">*Strukturierte Ersteinschätzung — keine Compliance-Garantie, keine Rechtsberatung.</div>
+    </div>
+
+    <!-- ===== SCREEN 1: INTAKE ===== -->
+    <section class="screen active" id="intake">
+      <div class="crumb">Schritt 01 / 06 — Onboarding</div>
+      <div class="h-row"><h1>Betroffenheitscheck &amp; Company Intake</h1></div>
+      <p class="lede">
+        Der erste Screen sammelt strukturierte Unternehmensdaten und ordnet die wahrscheinliche
+        NIS2-Betroffenheit ein. Er ersetzt keine Rechtsprüfung — unklare Fälle werden für Legal Review markiert.
+      </p>
+
+      <div class="intake-grid">
+        <div class="card formcard">
+          <div class="hd"><span>Unternehmensprofil</span><span class="step">erfasst · 6 / 6 Feldern</span></div>
+          <div class="frow"><div class="lbl">Unternehmen</div><div class="val">Müller Maschinenbau GmbH<span class="editmark" onclick="toast('Feld bearbeiten')">ändern</span></div></div>
+          <div class="frow"><div class="lbl">Branche / NACE</div><div class="val">C28 — Maschinenbau<span class="editmark" onclick="toast('Feld bearbeiten')">ändern</span></div></div>
+          <div class="frow"><div class="lbl">Mitarbeitende</div><div class="val">118 <span class="unit">Beschäftigte</span><span class="editmark" onclick="toast('Feld bearbeiten')">ändern</span></div></div>
+          <div class="frow"><div class="lbl">Jahresumsatz</div><div class="val">24,8 <span class="unit">Mio. EUR</span><span class="editmark" onclick="toast('Feld bearbeiten')">ändern</span></div></div>
+          <div class="frow"><div class="lbl">Bilanzsumme</div><div class="val">14,1 <span class="unit">Mio. EUR</span><span class="editmark" onclick="toast('Feld bearbeiten')">ändern</span></div></div>
+          <div class="frow"><div class="lbl">IT-Dienstleister</div><div class="val">Systemhaus Bayern Digital GmbH<span class="editmark" onclick="toast('Feld bearbeiten')">ändern</span></div></div>
+        </div>
+
+        <div class="card result">
+          <div class="verdict">
+            <div class="vk">Ergebnis der Ersteinschätzung</div>
+            <div class="vv">Wahrscheinlich <em>wichtige Einrichtung</em> — rechtliche Prüfung empfohlen</div>
+            <div class="classbar">
+              <div class="off">Nicht betroffen</div>
+              <div class="off">Unklar</div>
+              <div class="on">Wichtige Einrichtung</div>
+            </div>
+          </div>
+          <ul class="reasons">
+            <li>Branche C28 ist in BSIG Anlage 2 (verarbeitendes Gewerbe) gelistet.</li>
+            <li>Größenkriterium erfüllt: ≥ 50 Beschäftigte bzw. ≥ 10 Mio. EUR Umsatz.</li>
+            <li>Unterhalb der Schwelle für „besonders wichtige Einrichtungen“.</li>
+            <li class="warn">Finale Einordnung kann auch von Umsatz- &amp; Bilanzschwellen abhängen — Selbstidentifizierung erforderlich.</li>
+          </ul>
+          <div class="flag">
+            <span class="bang">!</span>
+            <span><b>Legal-Review-Flag.</b> Diese Einordnung ist eine strukturierte Orientierung auf Basis der erfassten Daten. Die rechtlich verbindliche Selbstidentifizierung und Registrierung beim BSI bleibt Aufgabe des Unternehmens.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sechead"><span class="num">→</span> Empfohlene nächste Schritte</div>
+      <div class="next-actions">
+        <div class="card na" onclick="go('gapmap')">
+          <div class="nk">SCHRITT 02</div>
+          <div class="nt">§30 Gap Map starten</div>
+          <div class="nd">Zehn Risikomanagement-Bereiche in konkrete Aufgaben übersetzen.</div>
+        </div>
+        <div class="card na" onclick="toast('Registrierungs-Assistent geöffnet')">
+          <div class="nk">BSI-PORTAL</div>
+          <div class="nt">Registrierung vorbereiten</div>
+          <div class="nd">Unternehmens-, Kontakt- und Sektordaten für die BSI-Meldung sammeln.</div>
+        </div>
+        <div class="card na" onclick="go('builder')">
+          <div class="nk">LIEFERKETTE</div>
+          <div class="nt">Nur Fragebogen-Modus</div>
+          <div class="nd">Falls primär Kundenfragebögen den Druck erzeugen — direkt zum Builder.</div>
+        </div>
+      </div>
+
+      <div class="sources">
+        <span class="src"><span class="dot"></span>Quelle: BSI — NIS-2-Betroffenheitsprüfung</span>
+        <span class="src"><span class="dot"></span>Quelle: BSIG Anlage 2 — verarbeitendes Gewerbe</span>
+        <span class="src guard"><span class="dot"></span>Guardrail: Orientierung, nicht rechtlich bindend</span>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN 2: GAP MAP ===== -->
+    <section class="screen" id="gapmap">
+      <div class="crumb">Schritt 02 / 06 — §30 BSIG Risikomanagement</div>
+      <div class="h-row"><h1>§30 Gap Map</h1></div>
+      <p class="lede">
+        Die zehn Risikomanagement-Bereiche aus §30 BSIG — übersetzt in operative Karten mit Owner,
+        fehlendem Nachweis und nächster Aktion. Keine grüne Karte ohne hinterlegte Evidenz.
+      </p>
+
+      <div class="gapstats">
+        <div class="gapstat s-green"><div class="gn">3</div><div class="gl">dokumentiert</div></div>
+        <div class="gapstat s-yellow"><div class="gn">4</div><div class="gl">in Arbeit</div></div>
+        <div class="gapstat s-red"><div class="gn">3</div><div class="gl">fehlen</div></div>
+        <div class="gapstat"><div class="gn">46&nbsp;%</div><div class="gl">Gesamt-Readiness</div></div>
+      </div>
+
+      <div class="gapgrid" id="gapgrid"><!-- gefüllt per JS --></div>
+
+      <div class="detail" id="measureDetail"><!-- gefüllt per JS --></div>
+
+      <div class="sources">
+        <span class="src"><span class="dot"></span>Quelle: BSIG §30 — zehn Mindestbereiche Risikomanagement</span>
+        <span class="src guard"><span class="dot"></span>Produktprinzip: Nachweis vor Status — kein grünes Häkchen ohne Evidenz</span>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN 3: EVIDENCE ROOM ===== -->
+    <section class="screen" id="evidence">
+      <div class="crumb">Schritt 03 / 06 — Nachweisverwaltung</div>
+      <div class="h-row"><h1>Evidence Room</h1></div>
+      <p class="lede">
+        Jeder Nachweis ist mit §30-Bereich, Owner, Status, Review-Datum und Quelle verknüpft.
+        Der Evidence Room speichert nicht nur Dateien — er macht Nachweise prüfbar und wiederverwendbar.
+      </p>
+
+      <div class="filterbar" id="evFilter">
+        <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-right:4px;">Filter</span>
+        <span class="chip active" data-f="all">Alle <span class="c-n" id="cnt-all"></span></span>
+        <span class="chip" data-f="ok">Verwendbar <span class="c-n" id="cnt-ok"></span></span>
+        <span class="chip" data-f="review">Review fällig <span class="c-n" id="cnt-review"></span></span>
+        <span class="chip" data-f="miss">Fehlt <span class="c-n" id="cnt-miss"></span></span>
+      </div>
+
+      <div class="tablewrap">
+        <table class="evt">
+          <thead><tr>
+            <th style="width:24%;">Nachweis</th>
+            <th style="width:20%;">§30-Bereich</th>
+            <th style="width:16%;">Owner</th>
+            <th style="width:13%;">Status</th>
+            <th style="width:13%;">Review-Datum</th>
+            <th style="width:14%;">Quelle</th>
+          </tr></thead>
+          <tbody id="evBody"><!-- gefüllt per JS --></tbody>
+        </table>
+      </div>
+
+      <div class="grid2" style="margin-top:18px;">
+        <div class="card" style="padding:16px;">
+          <div class="dlabel">Detail · ausgewählter Nachweis</div>
+          <div id="evDetail" style="font-size:12.5px;">Zeile in der Tabelle anklicken, um den Nachweis zu öffnen.</div>
+        </div>
+        <div class="card" style="padding:16px;background:rgba(255,209,102,.32);">
+          <div class="dlabel">Guardrail</div>
+          <div style="font-size:12.5px;">
+            Ein vorhandener Nachweis belegt, <b>dass</b> eine Maßnahme dokumentiert ist — nicht automatisch,
+            dass sie rechtlich ausreichend ist. „Nachweis vorhanden“ und „rechtlich ausreichend“ bleiben getrennt.
+          </div>
+        </div>
+      </div>
+
+      <div class="sources">
+        <span class="src"><span class="dot"></span>Quelle: BSIG §30 — Dokumentationspflicht</span>
+        <span class="src guard"><span class="dot"></span>Guardrail: Nachweis vorhanden ≠ rechtlich ausreichend</span>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN 4: MANAGEMENT COCKPIT ===== -->
+    <section class="screen" id="cockpit">
+      <div class="crumb">Schritt 04 / 06 — §38 BSIG Geschäftsleitung</div>
+      <div class="h-row"><h1>Management Cockpit</h1></div>
+      <p class="lede">
+        §38 BSIG macht Umsetzung und Überwachung der Maßnahmen zur Aufgabe der Geschäftsleitung.
+        Das Cockpit übersetzt Detailarbeit in Entscheidungen — Sichtbarkeit ohne ISMS-Expertenwissen.
+      </p>
+
+      <div class="cockpit-top">
+        <div class="card score-card">
+          <div class="sk">Gesamt-Readiness Score</div>
+          <div class="score-ring">
+            <div class="ring"><div class="inner">46%</div></div>
+            <div class="score-leg">
+              <div class="row"><span class="sw led-green"></span> 3 Bereiche dokumentiert</div>
+              <div class="row"><span class="sw led-yellow"></span> 4 Bereiche in Arbeit</div>
+              <div class="row"><span class="sw led-red"></span> 3 Bereiche fehlen</div>
+            </div>
+          </div>
+        </div>
+        <div class="card bigfig red">
+          <div class="bk">High-Risk Gaps</div>
+          <div class="bn">3</div>
+          <div class="bd">Bereiche ohne hinterlegten Nachweis:</div>
+          <div class="blist"><span>Incident Handling</span><span>Lieferkette</span><span>Wirksamkeit</span></div>
+        </div>
+        <div class="card bigfig orange">
+          <div class="bk">GF-Freigaben offen</div>
+          <div class="bn">3</div>
+          <div class="bd">Warten auf Entscheidung der Geschäftsleitung.</div>
+          <div class="blist"><span>Frist diese Woche</span></div>
+        </div>
+      </div>
+
+      <div class="sechead"><span class="num">§38</span> Meldepflicht-Readiness · Incident-Timeline</div>
+      <div class="card timeline">
+        <div style="font-size:11.5px;color:var(--ink-soft);">
+          NIS2-Meldekette nach Bekanntwerden eines erheblichen Sicherheitsvorfalls — vorbereitete Rollen und Fristen.
+        </div>
+        <div class="tl-track">
+          <div class="tl-step">
+            <div class="tl-node done">✓</div>
+            <div class="tl-when">24 Stunden</div>
+            <div class="tl-what">Frühwarnung an das BSI</div>
+            <div class="tl-state" style="color:var(--green);">Rolle &amp; Vorlage bereit</div>
+          </div>
+          <div class="tl-step">
+            <div class="tl-node warn">!</div>
+            <div class="tl-when">72 Stunden</div>
+            <div class="tl-what">Meldung mit Erstbewertung</div>
+            <div class="tl-state" style="color:#9a7b00;">Eskalationsbaum unvollständig</div>
+          </div>
+          <div class="tl-step">
+            <div class="tl-node open">·</div>
+            <div class="tl-when">30 Tage</div>
+            <div class="tl-what">Abschlussmeldung</div>
+            <div class="tl-state" style="color:var(--red);">Kein Prozess hinterlegt</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sechead"><span class="num">→</span> Entscheidungen für die Geschäftsleitung</div>
+      <div class="card approvals">
+        <div class="appr-row">
+          <span class="badge b-red"><span class="led"></span>Freigabe</span>
+          <span class="at">Incident-Response-Rollenplan freigeben</span>
+          <span class="ameta">Risiko: 72h-Meldung nicht vorbereitet</span>
+          <span class="btn" style="padding:6px 12px;font-size:11px;" onclick="toast('Freigabe protokolliert · Audit-Trail aktualisiert')">Freigeben</span>
+        </div>
+        <div class="appr-row">
+          <span class="badge b-yellow"><span class="led"></span>Freigabe</span>
+          <span class="at">Budget Restore-Test &amp; Notfallplan</span>
+          <span class="ameta">Risiko: BCM ohne getesteten Restore</span>
+          <span class="btn ghost" style="padding:6px 12px;font-size:11px;" onclick="toast('Freigabe protokolliert · Audit-Trail aktualisiert')">Freigeben</span>
+        </div>
+        <div class="appr-row">
+          <span class="badge b-yellow"><span class="led"></span>Schulung</span>
+          <span class="at">GF-Cybersecurity-Schulung nach §38 buchen</span>
+          <span class="ameta">Risiko: Schulungsnachweis Leitung offen</span>
+          <span class="btn ghost" style="padding:6px 12px;font-size:11px;" onclick="toast('Termin-Anfrage gesendet')">Termin setzen</span>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <span class="btn" onclick="toast('Management-Report (PDF) wird erstellt — 6 Seiten, Stand 2026-05-19')">⤓ Management-Report exportieren</span>
+        <span style="font-size:11px;color:var(--muted);">PDF für Geschäftsleitung &amp; Beirat · Readiness, offene Risiken, Freigaben, Audit-Trail.</span>
+      </div>
+
+      <div class="sources">
+        <span class="src"><span class="dot"></span>Quelle: BSIG §38 — Verantwortung der Geschäftsleitung</span>
+        <span class="src"><span class="dot"></span>Quelle: BSI — Meldepflichten 24h / 72h / 30 Tage</span>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN 5: FRAGEBOGEN-BUILDER ===== -->
+    <section class="screen" id="builder">
+      <div class="crumb">Schritt 05 / 06 — Kunden- &amp; Lieferanten-Fragebögen</div>
+      <div class="h-row"><h1>Fragebogen-Builder</h1></div>
+      <p class="lede">
+        Viele Hersteller spüren Security-Druck zuerst über Kundenfragebögen. Der Builder schlägt
+        Antworten aus vorhandenen Nachweisen vor — mit Confidence-Label und Warnung bei fehlender Evidenz.
+      </p>
+
+      <div class="qb">
+        <div class="card qlist">
+          <div class="qlhd"><span>Kundenfragebogen</span><span class="qsrc">Automotive-OEM · 14 Fragen</span></div>
+          <div id="qList"><!-- gefüllt per JS --></div>
+        </div>
+
+        <div class="card answer">
+          <div class="ahd">
+            <div class="aq">Frage des Kunden</div>
+            <div class="aqt" id="aQuestion">—</div>
+          </div>
+          <div class="abody">
+            <div class="conf-row">
+              <span class="clabel">Confidence</span>
+              <span id="aConf"></span>
+              <span style="flex:1;"></span>
+              <span class="clabel">Antwortbasis</span>
+              <span class="badge b-blue"><span class="led"></span><span id="aEvCount">0</span> Nachweise</span>
+            </div>
+            <div class="draft" id="aDraft">—</div>
+            <div class="evidence-used" id="aEvidence"></div>
+            <div id="aWarn"></div>
+            <div class="qactions">
+              <span class="btn blue" onclick="toast('Antwort übernommen — in Antwort-Set für Automotive-OEM gespeichert')">Antwort übernehmen</span>
+              <span class="btn ghost" onclick="go('evidence')">Fehlenden Nachweis anlegen</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scale-note">
+        <b>Skalierungspfad — Supplier Evidence Exchange.</b> Einmal beantwortete Fragen werden
+        zu wiederverwendbaren Evidence-Paketen. Statt jeden Kundenfragebogen neu zu bearbeiten,
+        exportiert das Unternehmen ein gepflegtes Antwort-Set — der Wedge verschiebt sich von
+        einmaliger NIS2-Pflicht zu wiederkehrender Vertriebs- und Einkaufs-Routine.
+      </div>
+
+      <div class="sources">
+        <span class="src"><span class="dot"></span>Wedge: Wiederverwendung vorhandener Nachweise</span>
+        <span class="src guard"><span class="dot"></span>Guardrail: unbelegte Aussagen werden nicht als „erfüllt“ exportiert</span>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN 6: PARTNER VIEW ===== -->
+    <section class="screen" id="partner">
+      <div class="crumb">Skalierung — Systemhaus Partner Mode</div>
+      <div class="h-row"><h1>Systemhaus Partner-Ansicht</h1></div>
+      <p class="lede">
+        Regionale IT-Systemhäuser betreuen mehrere Mittelstands-Mandanten gleichzeitig. Der Partner-Modus
+        macht den Evidence Room zum Kanal-Werkzeug — ein Template, viele Mandanten, wiederholbare Reports.
+      </p>
+
+      <div class="partner-banner">
+        <div class="pb-glyph">SB</div>
+        <div>
+          <div class="pb-t">Systemhaus Bayern Digital GmbH</div>
+          <div class="pb-d">Partner-Workspace · 6 NIS2-Mandanten · Region Schwaben / Oberbayern</div>
+        </div>
+        <span class="btn" onclick="toast('Partner-gebrandeter Sammel-Report (PDF) wird erstellt — 6 Mandanten')">⤓ Partner-Report exportieren</span>
+      </div>
+
+      <div class="pstats">
+        <div class="card pstat"><div class="pn">6</div><div class="pl">Aktive Mandanten</div></div>
+        <div class="card pstat"><div class="pn">52&nbsp;%</div><div class="pl">Ø Readiness Portfolio</div></div>
+        <div class="card pstat"><div class="pn" style="color:var(--red);">2</div><div class="pl">Reviews diese Woche</div></div>
+        <div class="card pstat"><div class="pn" style="color:var(--blue);">1</div><div class="pl">Onboarding-Template</div></div>
+      </div>
+
+      <div class="tablewrap">
+        <table class="evt">
+          <thead><tr>
+            <th style="width:26%;">Mandant</th>
+            <th style="width:9%;">NACE</th>
+            <th style="width:22%;">Readiness</th>
+            <th style="width:13%;">Status</th>
+            <th style="width:14%;">Nächstes Review</th>
+            <th style="width:16%;">Nächster Schritt</th>
+          </tr></thead>
+          <tbody id="partnerBody"><!-- gefüllt per JS --></tbody>
+        </table>
+      </div>
+
+      <div class="grid2" style="margin-top:18px;">
+        <div class="card" style="padding:16px;background:rgba(15,138,95,.1);">
+          <div class="dlabel">Partner-Vorteil</div>
+          <div style="font-size:12.5px;">
+            Wiederholbare Gap-Checks, Evidence-Requests und Reports über alle Mandanten. Das Systemhaus
+            liefert NIS2-Readiness schneller — der Evidence Room ersetzt nicht die Vertrauensbeziehung,
+            er macht sie produktiver.
+          </div>
+        </div>
+        <div class="card" style="padding:16px;background:rgba(255,209,102,.32);">
+          <div class="dlabel">Offene Hypothese · noch zu validieren</div>
+          <div style="font-size:12.5px;">
+            Ob Systemhäuser den Evidence Room als Partner-Werkzeug statt als Wettbewerb sehen, ist eine
+            zentrale GTM-Annahme. Sie muss in Systemhaus-Interviews getestet werden — Primärvalidierung steht aus.
+          </div>
+        </div>
+      </div>
+
+      <div class="sources">
+        <span class="src"><span class="dot"></span>GTM-Hypothese: Systemhaus als Vertriebskanal</span>
+        <span class="src guard"><span class="dot"></span>Status: Annahme — Primärvalidierung ausstehend</span>
+      </div>
+    </section>
+
+    <div class="foot" id="globalFoot">
+      NIS2 Evidence Room — funktionale Produkt-Demo mit statischen Beispieldaten (Müller Maschinenbau GmbH, fiktiv).
+      Diese Demo unterstützt die Nachweis-Vorbereitung und ist <b>keine NIS2-Compliance-Garantie und keine Rechtsberatung</b>.
+      BSI nennt bundesweit ca. 29.500 betroffene wichtige und besonders wichtige Einrichtungen — das ist der
+      regulatorische Gesamtumfang, nicht der adressierte Beachhead. Erster Beachhead: grob 4.100–4.600 mittelgroße
+      C26–C30-Hersteller (Schätzung aus Eurostat 2024, provisional). Primärvalidierung mit Interviews steht aus.
+    </div>
+
+  </main>
+</div>
+
+<!-- toast -->
+<div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--paper);padding:11px 20px;font-size:12px;font-weight:600;
+  border:2.5px solid var(--orange);box-shadow:4px 4px 0 rgba(0,0,0,.3);opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;z-index:90;"></div>
+
+<script>
+/* ========= NAVIGATION ========= */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
+  document.querySelectorAll('.navitem').forEach(n=>n.classList.toggle('active',n.dataset.screen===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.navitem[data-screen]').forEach(n=>{
+  n.addEventListener('click',()=>go(n.dataset.screen));
+});
+
+/* ========= TOAST ========= */
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';},2600);
+}
+
+/* ========= §30 GAP MAP DATA ========= */
+const measures=[
+ {no:1,t:"Risikoanalyse & Sicherheitsrichtlinien",st:"ok",owner:"GF + IT-Leitung",
+  desc:"Konzept für Risikoanalyse und verbindliche Informationssicherheitsrichtlinien.",
+  ev:[{f:"risikoregister-2026.xlsx",ok:1},{f:"infosec-richtlinie-v3.pdf",ok:1}],
+  miss:"—",act:"Jährliche Aktualisierung im Review-Kalender bestätigen."},
+ {no:2,t:"Bewältigung von Sicherheitsvorfällen",st:"miss",owner:"IT-Leitung",
+  desc:"Incident-Handling: Rollen, Eskalationsbaum und 24h/72h/30d-Meldeprozess.",
+  ev:[{f:"incident-rollenplan.pdf",ok:0},{f:"eskalationsbaum.pdf",ok:0}],
+  miss:"Rollenplan und Eskalationsbaum fehlen vollständig.",
+  act:"Incident-Response-Rollen definieren und 72h-Meldeprozess festlegen."},
+ {no:3,t:"Business Continuity, Backup & Krisenmanagement",st:"prog",owner:"IT-Leitung + Systemhaus",
+  desc:"Backup-Konzept, getesteter Restore, RTO/RPO und Krisenkontaktliste.",
+  ev:[{f:"backup-konzept.pdf",ok:1},{f:"restore-test-protokoll.pdf",ok:0}],
+  miss:"Getesteter Restore-Nachweis fehlt.",
+  act:"Restore-Test durchführen und protokollieren — Budget-Freigabe offen."},
+ {no:4,t:"Sicherheit der Lieferkette",st:"miss",owner:"Einkauf + IT-Leitung",
+  desc:"Lieferantenliste, Sicherheitsfragebögen, Vertragsklauseln und Risikobewertung.",
+  ev:[{f:"lieferantenliste-security.xlsx",ok:0}],
+  miss:"Sicherheitsbewertete Lieferantenliste fehlt.",
+  act:"Kritische Lieferanten erfassen und Sicherheitsfragebogen versenden."},
+ {no:5,t:"Sicherheit in Beschaffung, Entwicklung & Wartung",st:"prog",owner:"IT-Leitung",
+  desc:"Sichere Beschaffung/Entwicklung inkl. Schwachstellenmanagement und Patch-Prozess.",
+  ev:[{f:"patch-management-prozess.pdf",ok:1},{f:"schwachstellenscan-q1.pdf",ok:0}],
+  miss:"Aktueller Schwachstellenscan fehlt.",
+  act:"Quartals-Schwachstellenscan beim Systemhaus beauftragen."},
+ {no:6,t:"Bewertung der Wirksamkeit der Maßnahmen",st:"miss",owner:"GF + IT-Leitung",
+  desc:"Verfahren zur regelmäßigen Überprüfung, ob die Maßnahmen wirksam sind.",
+  ev:[{f:"wirksamkeitspruefung.pdf",ok:0}],
+  miss:"Kein Verfahren zur Wirksamkeitsbewertung dokumentiert.",
+  act:"Internes Review-Verfahren mit festen Prüfintervallen aufsetzen."},
+ {no:7,t:"Cyberhygiene & Schulungen",st:"prog",owner:"HR + IT-Leitung",
+  desc:"Grundlegende Cyberhygiene-Praktiken und regelmäßige Mitarbeiterschulungen.",
+  ev:[{f:"schulungsplan-2026.pdf",ok:1},{f:"gf-schulungsnachweis.pdf",ok:0}],
+  miss:"Schulungsnachweis der Geschäftsleitung fehlt (§38).",
+  act:"GF-Cybersecurity-Schulung buchen und Nachweis hinterlegen."},
+ {no:8,t:"Kryptografie & Verschlüsselung",st:"ok",owner:"Systemhaus",
+  desc:"Konzept für Kryptografie und Verschlüsselung — Geräte, Transport, E-Mail.",
+  ev:[{f:"verschluesselungskonzept.pdf",ok:1},{f:"festplatten-encryption.png",ok:1}],
+  miss:"—",act:"Geltungsbereich bei neuen Standorten ergänzen."},
+ {no:9,t:"Zugriffskontrolle & Asset-Management",st:"prog",owner:"IT-Leitung + Systemhaus",
+  desc:"Zugriffskonzept, Berechtigungen und vollständiges Asset-Inventar.",
+  ev:[{f:"asset-inventar-export.xlsx",ok:1},{f:"berechtigungskonzept.pdf",ok:0}],
+  miss:"Aktuelles Berechtigungskonzept fehlt.",
+  act:"Berechtigungen prüfen und rollenbasiertes Konzept dokumentieren."},
+ {no:10,t:"Multi-Faktor-Authentifizierung & sichere Kommunikation",st:"ok",owner:"Systemhaus Bayern Digital",
+  desc:"MFA-Abdeckung für relevante Zugänge und gesicherte Kommunikationswege.",
+  ev:[{f:"m365-mfa-settings.png",ok:1},{f:"mfa-ausnahmenliste.xlsx",ok:1}],
+  miss:"—",act:"Quartalsweise MFA-Abdeckung überprüfen."}
+];
+const stMeta={
+  ok:{lbl:"dokumentiert",led:"led-green",badge:"b-green",col:"var(--green)"},
+  prog:{lbl:"in Arbeit",led:"led-yellow",badge:"b-yellow",col:"#9a7b00"},
+  miss:{lbl:"fehlt",led:"led-red",badge:"b-red",col:"var(--red)"}
+};
+
+function renderGap(){
+  const g=document.getElementById('gapgrid');
+  g.innerHTML=measures.map(m=>{
+    const s=stMeta[m.st];
+    return `<div class="measure" data-no="${m.no}" onclick="selMeasure(${m.no})">
+      <div class="mtop">
+        <span class="mno">§30.${m.no}</span>
+        <span class="mled ${s.led}"></span>
+      </div>
+      <div class="mtitle">${m.t}</div>
+      <div class="mowner">Owner: ${m.owner}</div>
+      <div class="mstatus" style="color:${s.col};">● ${s.lbl}</div>
+    </div>`;
+  }).join('');
+}
+function selMeasure(no){
+  const m=measures.find(x=>x.no===no), s=stMeta[m.st];
+  document.querySelectorAll('.measure').forEach(el=>el.classList.toggle('sel',+el.dataset.no===no));
+  const d=document.getElementById('measureDetail');
+  d.className='detail show';
+  d.innerHTML=`
+    <div class="dhd">
+      <span class="dno">§30.${m.no}</span>
+      <span class="dt">${m.t}</span>
+      <span class="badge ${s.badge}" style="margin-left:8px;"><span class="led"></span>${s.lbl}</span>
+      <span class="dclose" onclick="closeMeasure()">schließen ✕</span>
+    </div>
+    <div class="dbody">
+      <div class="dcol">
+        <div class="dlabel">Worum es geht</div>
+        <div class="dtext">${m.desc}</div>
+        <div class="dkv"><span class="dk">Owner</span><span>${m.owner}</span></div>
+        <div class="dkv"><span class="dk">Fehlender Nachweis</span><span style="color:${m.st==='ok'?'var(--green)':'var(--red)'};font-weight:700;">${m.miss}</span></div>
+        <div class="action-box">
+          <div class="al">Nächste Aktion</div>
+          <div class="av">${m.act}</div>
+        </div>
+      </div>
+      <div class="dcol">
+        <div class="dlabel">Verknüpfte Nachweise</div>
+        <div class="evlist">
+          ${m.ev.map(e=>`<div class="ev ${e.ok?'':'miss'}">
+            <span class="badge ${e.ok?'b-green':'b-red'}"><span class="led"></span>${e.ok?'vorhanden':'fehlt'}</span>
+            <span class="efile">${e.f}</span>
+          </div>`).join('')}
+        </div>
+        <div style="margin-top:14px;">
+          <span class="btn ghost" style="padding:7px 13px;font-size:11px;" onclick="go('evidence')">Im Evidence Room öffnen</span>
+        </div>
+      </div>
+    </div>`;
+  d.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function closeMeasure(){
+  document.getElementById('measureDetail').className='detail';
+  document.querySelectorAll('.measure').forEach(el=>el.classList.remove('sel'));
+}
+
+/* ========= EVIDENCE ROOM DATA ========= */
+const evidence=[
+ {f:"m365-mfa-settings.png",meta:"PNG · 2,1 MB",area:"§30.10 MFA & Kommunikation",owner:"Systemhaus Bayern Digital",
+  status:"ok",review:"2026-08-19",src:"Microsoft 365 Admin",
+  note:"Screenshot der MFA-Konfiguration für Remote- und Admin-Zugänge. Belegt vorhandene Konfiguration — nicht automatisch rechtliche Suffizienz."},
+ {f:"restore-test-protokoll.pdf",meta:"PDF · ausstehend",area:"§30.3 Business Continuity",owner:"IT-Leitung",
+  status:"miss",review:"—",src:"Manuell zu erstellen",
+  note:"Getesteter Restore aus dem Backup. Aktuell kein Protokoll hinterlegt — High-Risk Gap im Cockpit."},
+ {f:"asset-inventar-export.xlsx",meta:"XLSX · 480 KB",area:"§30.9 Zugriff & Asset-Mgmt",owner:"IT-Leitung",
+  status:"review",review:"2026-06-02",src:"RMM-Tool Export",
+  note:"Asset-Inventar aus dem Monitoring-Tool. Review fällig — letzter Export älter als das Quartalsintervall."},
+ {f:"incident-rollenplan.pdf",meta:"PDF · ausstehend",area:"§30.2 Incident Handling",owner:"IT-Leitung",
+  status:"miss",review:"—",src:"Manuell zu erstellen",
+  note:"Rollen- und Eskalationsplan für Sicherheitsvorfälle. Fehlt vollständig — blockiert die 72h-Meldefähigkeit."},
+ {f:"lieferantenliste-security.xlsx",meta:"XLSX · ausstehend",area:"§30.4 Lieferkette",owner:"Einkauf + IT-Leitung",
+  status:"miss",review:"—",src:"Manuell zu erstellen",
+  note:"Sicherheitsbewertete Liste kritischer Lieferanten inkl. Fragebogen-Status. Noch nicht erstellt."},
+ {f:"verschluesselungskonzept.pdf",meta:"PDF · 1,4 MB",area:"§30.8 Kryptografie",owner:"Systemhaus Bayern Digital",
+  status:"ok",review:"2026-11-10",src:"Systemhaus-Dokumentation",
+  note:"Verschlüsselungskonzept für Endgeräte, Transport und E-Mail. Vollständig und aktuell."},
+ {f:"schulungsplan-2026.pdf",meta:"PDF · 320 KB",area:"§30.7 Cyberhygiene & Schulung",owner:"HR",
+  status:"review",review:"2026-06-15",src:"HR / Schulungsanbieter",
+  note:"Schulungsplan für 2026. Review fällig — GF-Schulungsnachweis nach §38 noch zu ergänzen."},
+ {f:"patch-management-prozess.pdf",meta:"PDF · 210 KB",area:"§30.5 Beschaffung & Wartung",owner:"IT-Leitung",
+  status:"ok",review:"2026-09-30",src:"Systemhaus-Dokumentation",
+  note:"Dokumentierter Patch- und Update-Prozess. Aktuell — Schwachstellenscan separat zu ergänzen."}
+];
+const evStatus={
+  ok:{lbl:"verwendbar",badge:"b-green"},
+  review:{lbl:"Review fällig",badge:"b-yellow"},
+  miss:{lbl:"fehlt",badge:"b-red"}
+};
+let evFilterVal='all';
+function renderEvidence(){
+  const body=document.getElementById('evBody');
+  const rows=evidence.filter(e=>evFilterVal==='all'||e.status===evFilterVal);
+  body.innerHTML=rows.map(e=>{
+    const s=evStatus[e.status];
+    return `<tr data-f="${e.f}" onclick="selEvidence('${e.f}')">
+      <td><div class="efname">${e.f}</div><div class="efmeta">${e.meta}</div></td>
+      <td>${e.area}</td>
+      <td>${e.owner}</td>
+      <td><span class="badge ${s.badge}"><span class="led"></span>${s.lbl}</span></td>
+      <td class="efmeta">${e.review}</td>
+      <td>${e.src}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('cnt-all').textContent=evidence.length;
+  document.getElementById('cnt-ok').textContent=evidence.filter(e=>e.status==='ok').length;
+  document.getElementById('cnt-review').textContent=evidence.filter(e=>e.status==='review').length;
+  document.getElementById('cnt-miss').textContent=evidence.filter(e=>e.status==='miss').length;
+}
+function selEvidence(f){
+  const e=evidence.find(x=>x.f===f), s=evStatus[e.status];
+  document.querySelectorAll('#evBody tr').forEach(tr=>tr.classList.toggle('sel',tr.dataset.f===f));
+  document.getElementById('evDetail').innerHTML=
+    `<div style="font-weight:800;font-size:13px;margin-bottom:4px;">${e.f}</div>
+     <div style="margin-bottom:8px;"><span class="badge ${s.badge}"><span class="led"></span>${s.lbl}</span>
+       <span class="efmeta" style="margin-left:6px;">Review: ${e.review}</span></div>
+     <div>${e.note}</div>
+     <div style="margin-top:8px;font-size:11px;color:var(--muted);">Verknüpft mit ${e.area} · Owner ${e.owner} · Quelle ${e.src}</div>`;
+}
+document.querySelectorAll('#evFilter .chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('#evFilter .chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');
+    evFilterVal=c.dataset.f;
+    renderEvidence();
+  });
+});
+
+/* ========= FRAGEBOGEN-BUILDER DATA ========= */
+const questions=[
+ {n:"Q1",q:"Beschreiben Sie Ihr Verfahren zur Behandlung von Sicherheitsvorfällen.",
+  conf:"low",
+  draft:`Ein formaler Incident-Response-Prozess mit definierten Rollen und Eskalationsstufen
+   befindet sich derzeit im Aufbau. Die NIS2-Meldefristen <span class="ref">24h / 72h / 30d</span>
+   sind als Zielprozess hinterlegt; ein dokumentierter Rollenplan liegt noch nicht vor.`,
+  ev:[{f:"incident-rollenplan.pdf",ok:0}],
+  warn:`Kein belegter Incident-Prozess. Diese Antwort wird als <b>„braucht Nachweis"</b> markiert
+   und nicht als erfüllt exportiert. Erst §30.2 im Evidence Room schließen.`},
+ {n:"Q2",q:"Setzen Sie Multi-Faktor-Authentifizierung für Remote- und Administrationszugänge ein?",
+  conf:"high",
+  draft:`Ja. MFA ist für alle Remote- und Administrationszugänge über Microsoft 365 aktiviert.
+   Die Konfiguration ist per <span class="ref">m365-mfa-settings.png</span> belegt; dokumentierte
+   Ausnahmen sind in <span class="ref">mfa-ausnahmenliste.xlsx</span> erfasst.`,
+  ev:[{f:"m365-mfa-settings.png",ok:1},{f:"mfa-ausnahmenliste.xlsx",ok:1}],
+  warn:`Antwort vollständig durch vorhandene Nachweise gedeckt. Kann in das Antwort-Set
+   exportiert werden.`,warnOk:1},
+ {n:"Q3",q:"Wann wurde zuletzt ein Restore aus Ihrem Backup getestet?",
+  conf:"mid",
+  draft:`Ein Backup-Konzept ist dokumentiert (<span class="ref">backup-konzept.pdf</span>).
+   Ein protokollierter Restore-Test liegt aktuell nicht vor — die Durchführung ist geplant
+   und im Management Cockpit zur Freigabe vorgemerkt.`,
+  ev:[{f:"backup-konzept.pdf",ok:1},{f:"restore-test-protokoll.pdf",ok:0}],
+  warn:`Teilweise belegt: Konzept vorhanden, getesteter Restore fehlt. Antwort wird mit
+   Hinweis „Nachweis unvollständig" markiert.`},
+ {n:"Q4",q:"Verfügen Sie über ein aktuelles Asset-Inventar Ihrer IT-Systeme?",
+  conf:"mid",
+  draft:`Ein Asset-Inventar wird über das RMM-Tool des Systemhauses geführt
+   (<span class="ref">asset-inventar-export.xlsx</span>). Der letzte Export ist älter
+   als das Quartalsintervall — ein aktualisierter Export ist für 2026-06-02 terminiert.`,
+  ev:[{f:"asset-inventar-export.xlsx",ok:1}],
+  warn:`Nachweis vorhanden, aber Review fällig. Antwort als „aktualisierter Nachweis ausstehend" markiert.`}
+];
+const confMeta={
+  high:{lbl:"Hoch",badge:"b-green"},
+  mid:{lbl:"Mittel",badge:"b-yellow"},
+  low:{lbl:"Niedrig",badge:"b-red"}
+};
+function renderQList(){
+  document.getElementById('qList').innerHTML=questions.map((q,i)=>{
+    const c=confMeta[q.conf];
+    const dot=q.conf==='high'?'led-green':q.conf==='mid'?'led-yellow':'led-red';
+    return `<div class="qitem ${i===0?'sel':''}" data-i="${i}" onclick="selQuestion(${i})">
+      <span class="qn">${q.n}</span>
+      <span class="qdot ${dot}"></span>
+      <span class="qtxt">${q.q}</span>
+    </div>`;
+  }).join('');
+}
+function selQuestion(i){
+  const q=questions[i], c=confMeta[q.conf];
+  document.querySelectorAll('.qitem').forEach(el=>el.classList.toggle('sel',+el.dataset.i===i));
+  document.getElementById('aQuestion').textContent=q.q;
+  document.getElementById('aConf').innerHTML=`<span class="badge ${c.badge}"><span class="led"></span>${c.lbl}</span>`;
+  document.getElementById('aEvCount').textContent=q.ev.filter(e=>e.ok).length;
+  document.getElementById('aDraft').innerHTML='<b>Vorgeschlagene Antwort:</b><br>'+q.draft;
+  document.getElementById('aEvidence').innerHTML=
+    '<div class="dlabel">Genutzte Nachweise</div>'+
+    q.ev.map(e=>`<div class="eu-item">
+      <span class="badge ${e.ok?'b-green':'b-red'}"><span class="led"></span>${e.ok?'vorhanden':'fehlt'}</span>
+      <span class="efile">${e.f}</span></div>`).join('');
+  document.getElementById('aWarn').innerHTML=
+    `<div class="qwarn ${q.warnOk?'ok':''}">
+      <span class="qb-i">${q.warnOk?'✓':'!'}</span><span>${q.warn}</span></div>`;
+}
+
+/* ========= PARTNER VIEW DATA ========= */
+const clients=[
+ {name:"Müller Maschinenbau GmbH",nace:"C28",r:46,review:"2026-06-09",next:"Incident-Rollen klären"},
+ {name:"ElektroTech Bauer KG",nace:"C27",r:62,review:"2026-06-23",next:"Lieferantenliste prüfen"},
+ {name:"OptikForm GmbH",nace:"C26",r:31,review:"2026-06-04",next:"Betroffenheit rechtlich prüfen"},
+ {name:"AchsenWerk Süd GmbH",nace:"C29",r:74,review:"2026-07-14",next:"Restore-Test bestätigen"},
+ {name:"PräzisionsGuss Lechtal",nace:"C28",r:55,review:"2026-06-05",next:"Schwachstellenscan starten"},
+ {name:"NordTransfer Systeme",nace:"C30",r:43,review:"2026-07-02",next:"§30 Gap Map abschließen"}
+];
+function rClass(r){return r>=65?'hi':r>=45?'mid':'lo';}
+function rBadge(r){
+  return r>=65?'<span class="badge b-green"><span class="led"></span>auf Kurs</span>'
+        :r>=45?'<span class="badge b-yellow"><span class="led"></span>in Arbeit</span>'
+              :'<span class="badge b-red"><span class="led"></span>kritisch</span>';
+}
+function renderPartner(){
+  document.getElementById('partnerBody').innerHTML=clients.map(c=>`
+    <tr onclick="toast('Mandanten-Workspace: ${c.name}')">
+      <td class="efname">${c.name}</td>
+      <td>${c.nace}</td>
+      <td><div class="client-readiness">
+        <div class="rbar"><div class="rfill ${rClass(c.r)}" style="width:${c.r}%;"></div></div>
+        <span class="rpct">${c.r}%</span></div></td>
+      <td>${rBadge(c.r)}</td>
+      <td class="efmeta">${c.review}</td>
+      <td>${c.next}</td>
+    </tr>`).join('');
+}
+
+/* ========= INIT ========= */
+renderGap();
+renderEvidence();
+renderQList();
+selQuestion(0);
+renderPartner();
+</script>
+</body>
+</html>
